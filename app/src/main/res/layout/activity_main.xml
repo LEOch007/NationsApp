@@ -6,5 +6,45 @@
     android:layout_height="match_parent"
     tools:context="com.gy.linjliang.nationsapp.MainActivity">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonwei"
+        android:text="魏"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="80dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="80dp" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonshu"
+        android:text="蜀"
+        android:layout_marginLeft="80dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="300dp"
+        android:layout_marginStart="80dp" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonwu"
+        android:text="吴"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="300dp"
+        android:layout_marginRight="48dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="48dp" />
+    <ImageView
+        android:layout_width="381dp"
+        android:layout_height="400dp"
+        android:src="@mipmap/map"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
