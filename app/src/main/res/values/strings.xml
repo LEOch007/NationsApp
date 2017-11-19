@@ -8,8 +8,8 @@
 
     <string name="caocao_name">曹操</string>
     <string name="caocao_sex">男</string>
-    <string name="caocao_live">生卒（155&#8211;220）</string>
-    <string name="caocao_place">籍贯：豫州沛国谯</string>
+    <string name="caocao_live">（155&#8211;220）</string>
+    <string name="caocao_place">豫州沛国谯</string>
     <string name="caocao_nation">魏</string>
     <string name="caocao_information">曹操是西园八校尉之一，曾只身行刺董卓，失败后和袁绍共同联合天下诸侯讨伐董卓，后独自发展自身势力，一生中先后战胜了袁术、吕布、张绣、袁绍、刘表、张鲁、马超等割据势力，统一了北方。但是在南下讨伐江东的战役中，曹操在赤壁惨败。后来在和蜀汉的汉中争夺战中，曹操再次无功而返。曹操一生未称帝，他病死后，曹丕继位后不久称帝，追封曹操为魏武皇帝。</string>
 </resources>

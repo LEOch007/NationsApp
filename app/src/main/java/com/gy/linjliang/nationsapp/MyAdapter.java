@@ -55,9 +55,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         holder.iv.setImageResource(Infos.get(position).getImageindex());
         holder.tv1.setText(Infos.get(position).getName());
         holder.tv2.setText(Infos.get(position).getNation());
-        holder.tv3.setText(Infos.get(position).getSex());
-        holder.tv4.setText(Infos.get(position).getLive());
-        holder.tv5.setText(Infos.get(position).getPlace());
         //
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null)
@@ -91,18 +88,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         ImageView iv; //头像
         TextView tv1; //名字
         TextView tv2; //主效势力
-        TextView tv3; //性别
-        TextView tv4; //生卒年
-        TextView tv5; //籍贯
         View v;
         public MyViewHolder(View itemView) {
             super(itemView);
             iv = (ImageView) itemView.findViewById(R.id.touxiang);
             tv1 = (TextView) itemView.findViewById(R.id.mingzi);
             tv2 = (TextView) itemView.findViewById(R.id.nation);
-            tv3 = (TextView) itemView.findViewById(R.id.xingbie);
-            tv4 = (TextView) itemView.findViewById(R.id.shengzu);
-            tv5 = (TextView) itemView.findViewById(R.id.jiguan);
             v = itemView;
         }
     }

@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-
+    android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/touxiang"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:src="@mipmap/caocao"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:layout_margin="8dp"
+        />
     <TextView
         android:id="@+id/mingzi"
         android:layout_width="wrap_content"
@@ -22,10 +17,8 @@
         android:text="曹操"
         android:textSize="18sp"
         android:textColor="@android:color/black"
-        app:layout_constraintLeft_toRightOf="@+id/touxiang"
-        android:layout_marginLeft="10dp"
-        app:layout_constraintTop_toTopOf="@+id/touxiang"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginLeft="8dp"
         android:gravity="center"
         />
 
@@ -36,54 +29,10 @@
         android:text="@string/wei"
         android:textSize="18sp"
         android:textColor="@android:color/black"
-        app:layout_constraintLeft_toRightOf="@+id/mingzi"
-        android:layout_marginLeft="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/mingzi"
-        android:layout_marginBottom="0dp"
-        android:gravity="center"
-        />
-
-    <TextView
-        android:id="@+id/xingbie"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:text="男"
-        android:textColor="@android:color/black"
-        android:textSize="14sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/mingzi"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/mingzi"
-        android:gravity="center"
-        />
-
-    <TextView
-        android:id="@+id/shengzu"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:text="生卒（155-220）"
-        android:textSize="14sp"
-        android:textColor="@android:color/black"
-        app:layout_constraintLeft_toRightOf="@+id/xingbie"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/xingbie"
-        android:layout_marginBottom="0dp"
-        android:gravity="center"
-        />
-
-    <TextView
-        android:id="@+id/jiguan"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:text="籍贯：豫州沛国谯"
-        android:textColor="@android:color/black"
-        android:textSize="14sp"
-        app:layout_constraintLeft_toRightOf="@+id/shengzu"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/shengzu"
-        android:layout_marginBottom="0dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginLeft="16dp"
         android:gravity="center"
         />
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

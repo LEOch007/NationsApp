@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".InfoList"/>
+        <activity android:name=".InfoDetail"/>
     </application>
 
 </manifest>
