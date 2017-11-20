@@ -38,12 +38,12 @@ public class InfoList extends Activity{
         Infos = new ArrayList<Info>();
         //从数据库中添加数据到List中
         SQLiteDatabase db1=dbhelper.getReadableDatabase();
-        Cursor cursor = db1.query ("t_table",new String[]{"name","sex","live","place","nation","information","image"},null,null,null,null,null);
-        for(cursor.moveToFirst();!(cursor.isLast());cursor.moveToNext()){
+        Cursor cursor = db1.rawQuery("select * from t_table",null); //查询
+        for(cursor.moveToFirst();!(cursor.isAfterLast());cursor.moveToNext()){
             Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
-                    cursor.getString(cursor.getColumnIndex("sex")),
-                    cursor.getString(cursor.getColumnIndex("live")), cursor.getString(cursor.getColumnIndex("place")),
-                    cursor.getString(cursor.getColumnIndex("nation")), cursor.getString(cursor.getColumnIndex("information")));
+                    cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor.getColumnIndex("live")),
+                    cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
+                    cursor.getString(cursor.getColumnIndex("information")));
             Infos.add(in);
         }
 
@@ -91,7 +91,7 @@ public class InfoList extends Activity{
 
     private void initdata(){
 
-        SQLiteDatabase db=dbhelper.getWritableDatabase();
+        SQLiteDatabase db = dbhelper.getWritableDatabase();
 
         ContentValues cv=new ContentValues();
         cv.put("id",0);cv.put("name","关羽");cv.put("sex","男");cv.put("live","？ - 219");
@@ -107,7 +107,6 @@ public class InfoList extends Activity{
         cv2.put("id",2);cv2.put("name","张飞");cv2.put("sex","男");cv2.put("live","？ - 221");
         cv2.put("place","幽州涿郡");cv2.put("nation","蜀");cv2.put("information","66");cv2.put("image",R.mipmap.zhangfei);
         db.insert("t_table",null,cv2);
-
 
         ContentValues cv3=new ContentValues();
         cv3.put("id",3);cv3.put("name","诸葛亮");cv3.put("sex","男");cv3.put("live","181 - 234");
@@ -144,6 +143,7 @@ public class InfoList extends Activity{
         cv9.put("id",9);cv9.put("name","鲁肃");cv9.put("sex","男");cv9.put("live","172 - 217");
         cv9.put("place","徐州下邳国东城");cv9.put("nation","吴");cv9.put("information","66");cv9.put("image",R.mipmap.lusu);
         db.insert("t_table",null,cv9);
+
         db.close();
     }
 

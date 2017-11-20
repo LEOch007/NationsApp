@@ -20,7 +20,6 @@ public class MyDataBase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql="create table t_table(id int primary key,name varchar(20),sex varchar(5),live varchar(10)," +
                 "place varchar(10),nation varchar(10),information varchar(100),image int)";
-        Log.i("1234","12345");
         db.execSQL(sql);
     }
 
