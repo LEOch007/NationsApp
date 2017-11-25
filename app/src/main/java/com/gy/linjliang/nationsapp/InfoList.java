@@ -39,7 +39,7 @@ public class InfoList extends Activity{
     private MyDataBase dbhelper = new MyDataBase(InfoList.this,"t_db",null,1);
     private String current_sql_obeject = "全部"; //当前查询的范围
     //搜索组
-    private Button serchbutton;
+    private ImageView serchbutton;
     private EditText serchtext;
 
     //单选组
@@ -73,8 +73,8 @@ public class InfoList extends Activity{
         updateUI(current_sql_obeject,0);
 
         //搜索按钮
-        serchbutton = (Button) findViewById(R.id.setch_button);
-        serchtext = (EditText) findViewById(R.id.serch_text);
+        serchbutton = (ImageView) findViewById(R.id.search_btn);
+        serchtext = (EditText) findViewById(R.id.search_text);
         serchbutton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -263,8 +263,8 @@ public class InfoList extends Activity{
             else if(diff==1){
                 Infos = new ArrayList<Info>();
                 SQLiteDatabase sqLiteDatabase=dbhelper.getReadableDatabase();
-                Cursor cursor = sqLiteDatabase.rawQuery("select * from t_table"+
-                                "where nation='" +sql_obeject+ "' or name like \"% "+sql_obeject+" \";"
+                Cursor cursor = sqLiteDatabase.rawQuery("select * from t_table "+
+                                "where nation='" +sql_obeject+ "' or name like \"%"+sql_obeject+"%\";"
                         ,null); //关键字查询
                 for(cursor.moveToFirst();!(cursor.isAfterLast());cursor.moveToNext()){
                     Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
