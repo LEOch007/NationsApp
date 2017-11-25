@@ -18,7 +18,8 @@ public class MyDataBase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql="create table t_table(id int primary key,name varchar(20),sex varchar(5),live varchar(10)," +
+        String sql="create table if not exists t_table" +
+                "(id int primary key,name varchar(20),sex varchar(5),live varchar(10)," +
                 "place varchar(10),nation varchar(10),information varchar(100),image int)";
         db.execSQL(sql);
     }
