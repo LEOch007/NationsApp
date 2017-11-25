@@ -3,6 +3,9 @@ package com.gy.linjliang.nationsapp;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.IDNA;
 import android.os.Bundle;
@@ -23,13 +26,23 @@ import org.greenrobot.eventbus.EventBus;
 public class InfoDetail extends Activity {
     private boolean tag = false;
     private Info p; //商品
+    //详细信息界面
+    private ImageView ima;
+    private TextView renname;
+    private TextView rensex;
+    private TextView renlive;
+    private TextView renplace;
+    private TextView rennation;
+    private TextView reninformation;
 
-    private EditText dialog_name;
-    private EditText dialog_sex;
-    private EditText dialog_live;
-    private EditText dialog_place;
-    private EditText dialog_nation;
-    private EditText dialog_information;
+    //对话框
+    private EditText dialogname;
+    private EditText dialogsex;
+    private EditText dialoglive;
+    private EditText dialogplace;
+    private EditText dialognation;
+    private EditText dialoginformation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,19 +50,19 @@ public class InfoDetail extends Activity {
 
         p = (Info) getIntent().getSerializableExtra("Info"); // 接收
         //添加各内容
-        ImageView ima = (ImageView)findViewById(R.id.ren_touxiang);
+        ima = (ImageView)findViewById(R.id.ren_touxiang);
         ima.setImageResource(p.getImageindex());    //头像图片
-        TextView renname = (TextView)findViewById(R.id.ren_name);
+        renname = (TextView)findViewById(R.id.ren_name);
         renname.setText(p.getName());   //名字
-        TextView rennation = (TextView)findViewById(R.id.ren_nation);
-        rennation.setText(p.getNation());   //国家
-        TextView rensex = (TextView)findViewById(R.id.ren_sex);
+        rensex = (TextView)findViewById(R.id.ren_sex);
         rensex.setText(p.getSex());     //性别
-        TextView renlive = (TextView)findViewById(R.id.ren_live);
+        renlive = (TextView)findViewById(R.id.ren_live);
         renlive.setText(p.getLive());   //生卒
-        TextView renplace = (TextView)findViewById(R.id.ren_place);
+        renplace = (TextView)findViewById(R.id.ren_place);
         renplace.setText(p.getPlace());   //籍贯
-        TextView reninformation = (TextView)findViewById(R.id.ren_information);
+        rennation = (TextView)findViewById(R.id.ren_nation);
+        rennation.setText(p.getNation());   //国家
+        reninformation = (TextView)findViewById(R.id.ren_information);
         reninformation.setText(p.getInformation());   //信息
 
         //返回键的点击事件
@@ -84,25 +97,26 @@ public class InfoDetail extends Activity {
         xiugai.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+//                Toast.makeText(InfoDetail.this,p.getName(),Toast.LENGTH_LONG).show();
                 // 自定义对话框的实现——使用 LayoutInflater 类
                 LayoutInflater factory = LayoutInflater.from(InfoDetail.this);
                 View newView = factory.inflate(R.layout.dialoglayout, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(InfoDetail.this);
 
-                dialog_name = (EditText) findViewById(R.id.dialog_name);
-                dialog_sex = (EditText) findViewById(R.id.dialog_sex);
-                dialog_live = (EditText) findViewById(R.id.dialog_live);
-                dialog_place = (EditText) findViewById(R.id.dialog_place);
-                dialog_nation = (EditText) findViewById(R.id.dialog_nation);
-                dialog_information = (EditText) findViewById(R.id.dialog_information);
+                dialogname = (EditText) newView.findViewById(R.id.dialog_name);
+                dialogsex = (EditText) newView.findViewById(R.id.dialog_sex);
+                dialoglive = (EditText) newView.findViewById(R.id.dialog_live);
+                dialogplace = (EditText) newView.findViewById(R.id.dialog_place);
+                dialognation = (EditText) newView.findViewById(R.id.dialog_nation);
+                dialoginformation = (EditText) newView.findViewById(R.id.dialog_information);
 
                 //设置初始内容
-                dialog_name.setText(p.getName());
-                dialog_sex.setText(p.getSex());
-                dialog_live.setText(p.getLive());
-                dialog_place.setText(p.getPlace());
-                dialog_nation.setText(p.getNation());
-                dialog_information.setText(p.getInformation());
+                dialogname.setText(p.getName());
+                dialogsex.setText(p.getSex());
+                dialoglive.setText(p.getLive());
+                dialogplace.setText(p.getPlace());
+                dialognation.setText(p.getNation());
+                dialoginformation.setText(p.getInformation());
 
                 // 自定义对话框的实现
                 builder.setView(newView);
@@ -110,55 +124,60 @@ public class InfoDetail extends Activity {
                 builder.setPositiveButton("保存修改", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (dialog_name.length() != 0) {
+                        if (dialogname.length()==0) {
+                            Toast.makeText(InfoDetail.this,"名字不能为空",Toast.LENGTH_SHORT).show();
+                        }
+                        if (dialogname.length() != 0) {
                             MyDataBase db = new MyDataBase(getBaseContext());
                             SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
                             sqLiteDatabase.execSQL("update t_table" +
                                     " set name = ? where id = ?", new Object[]{
-                                    dialog_name.getText().toString(), p.getId()});
+                                    dialogname.getText().toString(), p.getId()});
                             sqLiteDatabase.close();
                         }
-                        if (dialog_sex.length() != 0) {
+                        if (dialogsex.length() != 0) {
                             MyDataBase db = new MyDataBase(getBaseContext());
                             SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
                             sqLiteDatabase.execSQL("update t_table" +
                                     " set sex = ? where id = ?", new Object[]{
-                                    dialog_sex.getText().toString(), p.getId()});
+                                    dialogsex.getText().toString(), p.getId()});
                             sqLiteDatabase.close();
                         }
-                        if (dialog_live.length() != 0) {
+                        if (dialoglive.length() != 0) {
                             MyDataBase db = new MyDataBase(getBaseContext());
                             SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
                             sqLiteDatabase.execSQL("update t_table" +
                                     " set live = ? where id = ?", new Object[]{
-                                    dialog_live.getText().toString(), p.getId()});
+                                    dialoglive.getText().toString(), p.getId()});
                             sqLiteDatabase.close();
                         }
-                        if (dialog_place.length() != 0) {
+                        if (dialogplace.length() != 0) {
                             MyDataBase db = new MyDataBase(getBaseContext());
                             SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
                             sqLiteDatabase.execSQL("update t_table" +
                                     " set place = ? where id = ?", new Object[]{
-                                    dialog_place.getText().toString(), p.getId()});
+                                    dialogplace.getText().toString(), p.getId()});
                             sqLiteDatabase.close();
                         }
-                        if (dialog_nation.length() != 0) {
+                        if (dialognation.length() != 0) {
                             MyDataBase db = new MyDataBase(getBaseContext());
                             SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
                             sqLiteDatabase.execSQL("update t_table" +
                                     " set nation = ? where id = ?", new Object[]{
-                                    dialog_nation.getText().toString(), p.getId()});
+                                    dialognation.getText().toString(), p.getId()});
                             sqLiteDatabase.close();
                         }
-                        if (dialog_information.length() != 0) {
+                        if (dialoginformation.length() != 0) {
                             MyDataBase db = new MyDataBase(getBaseContext());
                             SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
                             sqLiteDatabase.execSQL("update t_table" +
                                     " set information = ? where id = ?", new Object[]{
-                                    dialog_information.getText().toString(), p.getId()});
+                                    dialoginformation.getText().toString(), p.getId()});
                             sqLiteDatabase.close();
                         }
-//                        dataUpdate();
+                        dataUpdate();//更新到当前UI上
+                        Toast.makeText(InfoDetail.this,"人物信息已修改",Toast.LENGTH_SHORT).show();
+                        setResult(22,new Intent());
                     }
                 });
                 builder.setNegativeButton("放弃修改", new DialogInterface.OnClickListener() {
@@ -167,7 +186,28 @@ public class InfoDetail extends Activity {
 
                     }
                 });
+                builder.show();
             }
         });
     }
+
+    // 将保存在数据库中的数据更新到UI中的函数
+    public void dataUpdate(){
+        try {
+            MyDataBase db = new MyDataBase(getBaseContext());
+            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+            Cursor cursor = sqLiteDatabase.rawQuery("select * from t_table where id=" + p.getId(), null); //查询
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+//                Toast.makeText(InfoDetail.this, cursor.getString(cursor.getColumnIndex("name")), Toast.LENGTH_LONG).show();
+                renname.setText(cursor.getString(cursor.getColumnIndex("name")));
+                rensex.setText(cursor.getString(cursor.getColumnIndex("sex")));
+                renlive.setText(cursor.getString(cursor.getColumnIndex("live")));
+                renplace.setText(cursor.getString(cursor.getColumnIndex("place")));
+                rennation.setText(cursor.getString(cursor.getColumnIndex("nation")));
+                reninformation.setText(cursor.getString(cursor.getColumnIndex("information")));
+            }
+        }
+        catch (SQLException e) {}
+    }
+
 }

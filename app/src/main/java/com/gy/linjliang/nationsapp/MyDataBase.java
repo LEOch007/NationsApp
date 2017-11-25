@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class MyDataBase extends SQLiteOpenHelper {
     private  static final int DB_VERSION = 1;
-    private  static final String DB_NAME = "my_db";
+    private  static final String DB_NAME = "t_db";
 
     public MyDataBase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);

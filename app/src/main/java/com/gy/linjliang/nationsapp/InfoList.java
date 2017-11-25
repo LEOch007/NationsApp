@@ -4,13 +4,17 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,7 +31,14 @@ public class InfoList extends Activity{
     private RecyclerView mRecycleView;
     private MyAdapter myAdapter;
     private List<Info> Infos;
-    private MyDataBase dbhelper = new MyDataBase(getBaseContext());
+    private MyDataBase dbhelper = new MyDataBase(InfoList.this,"t_db",null,1);
+    private String current_sql_obeject; //当前查询的范围
+
+    private RadioGroup radiogroup;
+    private RadioButton radioall;
+    private RadioButton radiowei;
+    private RadioButton radioshu;
+    private RadioButton radiowu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,37 +46,18 @@ public class InfoList extends Activity{
 
         //数据库数据初始化
         initdata();
-        Infos = new ArrayList<Info>();
         //从数据库中添加数据到List中
-        SQLiteDatabase db1=dbhelper.getReadableDatabase();
-        Cursor cursor = db1.rawQuery("select * from t_table",null); //查询
-        for(cursor.moveToFirst();!(cursor.isAfterLast());cursor.moveToNext()){
-            Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
-                    cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor.getColumnIndex("live")),
-                    cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
-                    cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),0);
-            Infos.add(in);
-        }
-
-        /*    --- RecyclerView ---  */
-        mRecycleView = (RecyclerView) findViewById(R.id.recyclerview);
-        mRecycleView.setLayoutManager(new LinearLayoutManager(this)); //垂直布局
-        myAdapter = new MyAdapter(this, Infos);
-        /*  网上的库 添加动画  */
-        ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(myAdapter);
-        animationAdapter.setDuration(1000);
-        mRecycleView.setAdapter(animationAdapter);
-        mRecycleView.setItemAnimator(new OvershootInLeftAnimator());
+        updateUI();
 
         myAdapter.setOnItemClickLitener(new MyAdapter.OnItemClickLitener()
         {
-            //点击事件
+            //点击事件 跳转InfoDetail
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(InfoList.this, InfoDetail.class); //显式调用
                 Info temp = Infos.get(position); //第i个Info商品信息
                 intent.putExtra("Info", temp);
-                startActivityForResult(intent,1);
+                startActivityForResult(intent,2);
             }
             //长按事件
             @Override
@@ -78,6 +70,57 @@ public class InfoList extends Activity{
 
         });
 
+        //单选组
+        radiogroup = (RadioGroup) findViewById(R.id.radiogroup);
+        radioall = (RadioButton) findViewById(R.id.radio0);
+        radiowei = (RadioButton) findViewById(R.id.radio1);
+        radioshu = (RadioButton) findViewById(R.id.radio2);
+        radiowu = (RadioButton) findViewById(R.id.radio3);
+
+        radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkID) {
+                if(checkID==radioall.getId()){
+                    current_sql_obeject = (String) radioall.getText();
+                    Toast.makeText(InfoList.this,current_sql_obeject,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    //接收到返回的结果
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode==2 && resultCode==22){
+            updateUI(); //更新UI
+        }
+    }
+
+    //从数据库中更新数据到UI界面
+    public void updateUI(){
+        try{
+            Infos = new ArrayList<Info>();
+            SQLiteDatabase db1=dbhelper.getReadableDatabase();
+            Cursor cursor = db1.rawQuery("select * from t_table",null); //查询
+            for(cursor.moveToFirst();!(cursor.isAfterLast());cursor.moveToNext()){
+                Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor.getColumnIndex("live")),
+                        cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
+                        cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),0);
+                Infos.add(in);
+            }
+            db1.close();
+            /*    --- RecyclerView ---  */
+            mRecycleView = (RecyclerView) findViewById(R.id.recyclerview);
+            mRecycleView.setLayoutManager(new LinearLayoutManager(this)); //垂直布局
+            myAdapter = new MyAdapter(this, Infos);
+        /*  网上的库 添加动画  */
+            ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(myAdapter);
+            animationAdapter.setDuration(1000);
+            mRecycleView.setAdapter(animationAdapter);
+            mRecycleView.setItemAnimator(new OvershootInLeftAnimator());
+        }catch (SQLException e){}
     }
 
     private void initdata(){
