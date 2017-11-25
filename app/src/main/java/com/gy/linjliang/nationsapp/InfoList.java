@@ -1,7 +1,9 @@
 package com.gy.linjliang.nationsapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -11,8 +13,10 @@ import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -40,6 +44,14 @@ public class InfoList extends Activity{
     private RadioButton radiowei;
     private RadioButton radioshu;
     private RadioButton radiowu;
+
+    //对话框
+    private EditText dialogname;
+    private EditText dialogsex;
+    private EditText dialoglive;
+    private EditText dialogplace;
+    private EditText dialognation;
+    private EditText dialoginformation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +155,64 @@ public class InfoList extends Activity{
             }
         });
 
+        //增加按钮
+        ImageView zengjiabutton = (ImageView)findViewById(R.id.add_btn);
+        zengjiabutton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                // 自定义对话框的实现——使用 LayoutInflater 类
+                LayoutInflater factory = LayoutInflater.from(InfoList.this);
+                View newView = factory.inflate(R.layout.dialoglayout, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(InfoList.this);
+
+                dialogname = (EditText) newView.findViewById(R.id.dialog_name);
+                dialogsex = (EditText) newView.findViewById(R.id.dialog_sex);
+                dialoglive = (EditText) newView.findViewById(R.id.dialog_live);
+                dialogplace = (EditText) newView.findViewById(R.id.dialog_place);
+                dialognation = (EditText) newView.findViewById(R.id.dialog_nation);
+                dialoginformation = (EditText) newView.findViewById(R.id.dialog_information);
+
+                // 自定义对话框的实现
+                builder.setView(newView);
+                builder.setTitle("增加人物信息");
+                builder.setPositiveButton("保存修改", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if ((dialogname.length()==0) && (dialogsex.length() == 0) &&
+                                (dialoglive.length() == 0) && (dialogplace.length() == 0) &&
+                                (dialoginformation.length() == 0))
+                        {
+                            Toast.makeText(InfoList.this,"人物信息不能为空",Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            MyDataBase db = new MyDataBase(getBaseContext());
+                            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+
+                            sqLiteDatabase.close();
+                        }
+//                        if (dialogname.length() != 0) {
+//                            MyDataBase db = new MyDataBase(getBaseContext());
+//                            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+//                            sqLiteDatabase.execSQL("update t_table" +
+//                                    " set name = ? where id = ?", new Object[]{
+//                                    dialogname.getText().toString(), p.getId()});
+//                            sqLiteDatabase.close();
+//                        }
+
+//                        dataUpdate();//更新到当前UI上
+                        Toast.makeText(InfoList.this,"人物信息已修改",Toast.LENGTH_SHORT).show();
+                        setResult(22,new Intent());
+                    }
+                });
+                builder.setNegativeButton("放弃修改", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
+            }
+        });
     }
 
     //接收到返回的结果
