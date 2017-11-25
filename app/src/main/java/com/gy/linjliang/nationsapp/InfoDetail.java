@@ -65,15 +65,6 @@ public class InfoDetail extends Activity {
         reninformation = (TextView)findViewById(R.id.ren_information);
         reninformation.setText(p.getInformation());   //信息
 
-        //返回键的点击事件
-        Button back = (Button) findViewById(R.id.back); //返回键
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         //加入收藏夹
         final Button star = (Button) findViewById(R.id.star);
         star.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +84,7 @@ public class InfoDetail extends Activity {
             }
         });
 
-        Button xiugai =(Button) findViewById(R.id.xiugaibutton);
+        ImageView xiugai =(ImageView) findViewById(R.id.modify_btn);
         xiugai.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){

@@ -26,7 +26,7 @@ import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 
 public class MainActivity extends AppCompatActivity {
     private boolean tag=false; //点击浮动按钮变化
-    private FloatingActionButton mfab; //浮动按钮
+    private ImageView mfab;
     private RecyclerView mshoucangjia; //收藏夹
     private MyAdapter shoucangAdapter;
     private List<Info> shoucangList; //收藏夹的List
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         final Button buttonwei=(Button) findViewById(R.id.buttonwei);
         final Button buttonshu=(Button) findViewById(R.id.buttonshu);
         final Button buttonwu=(Button) findViewById(R.id.buttonwu);
-        final ImageView map = (ImageView)findViewById(R.id.imageView);
+//        final ImageView map = (ImageView)findViewById(R.id.imageView);
 
         //三国各自的button
         buttonwei.setOnClickListener(new View.OnClickListener() {
@@ -79,40 +79,41 @@ public class MainActivity extends AppCompatActivity {
         final TextView tubiao = (TextView)findViewById(R.id.tubiao);
         final TextView wenzi = (TextView)findViewById(R.id.wenzi);
         final View selfline = findViewById(R.id.selfline);
-        mfab = (FloatingActionButton) findViewById(R.id.fab);
-        mfab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!tag) {
-                    mfab.setImageResource(R.mipmap.mainpage); //切换图像
-                    //设置可见
-                    mshoucangjia.setVisibility(View.VISIBLE);
-                    tubiao.setVisibility(View.VISIBLE);
-                    wenzi.setVisibility(View.VISIBLE);
-                    selfline.setVisibility(View.VISIBLE);
-                    //设置不可见
-                    map.setVisibility(View.GONE);
-                    buttonwei.setVisibility(View.GONE);
-                    buttonshu.setVisibility(View.GONE);
-                    buttonwu.setVisibility(View.GONE);
-                    tag = true;
-                }
-                else{
-                    mfab.setImageResource(R.mipmap.shoplist); //切换图像
-                    //设置不可见
-                    mshoucangjia.setVisibility(View.GONE);
-                    tubiao.setVisibility(View.GONE);
-                    wenzi.setVisibility(View.GONE);
-                    selfline.setVisibility(View.GONE);
-                    //设置可见
-                    map.setVisibility(View.VISIBLE);
-                    buttonwei.setVisibility(View.VISIBLE);
-                    buttonshu.setVisibility(View.VISIBLE);
-                    buttonwu.setVisibility(View.VISIBLE);
-                    tag = false;
-                }
-            }
-        });
+
+//        mfab = (ImageView) findViewById(R.id.favorite);
+//        mfab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(!tag) {
+//                    mfab.setImageResource(R.mipmap.mainpage); //切换图像
+//                    //设置可见
+//                    mshoucangjia.setVisibility(View.VISIBLE);
+//                    tubiao.setVisibility(View.VISIBLE);
+//                    wenzi.setVisibility(View.VISIBLE);
+//                    selfline.setVisibility(View.VISIBLE);
+//                    //设置不可见
+//                    map.setVisibility(View.GONE);
+//                    buttonwei.setVisibility(View.GONE);
+//                    buttonshu.setVisibility(View.GONE);
+//                    buttonwu.setVisibility(View.GONE);
+//                    tag = true;
+//                }
+//                else{
+//                    mfab.setImageResource(R.mipmap.shoplist); //切换图像
+//                    //设置不可见
+//                    mshoucangjia.setVisibility(View.GONE);
+//                    tubiao.setVisibility(View.GONE);
+//                    wenzi.setVisibility(View.GONE);
+//                    selfline.setVisibility(View.GONE);
+//                    //设置可见
+//                    map.setVisibility(View.VISIBLE);
+//                    buttonwei.setVisibility(View.VISIBLE);
+//                    buttonshu.setVisibility(View.VISIBLE);
+//                    buttonwu.setVisibility(View.VISIBLE);
+//                    tag = false;
+//                }
+//            }
+//        });
 
         /*     ------   注册订阅者  -------   */
         EventBus.getDefault().register(this); //订阅消息
