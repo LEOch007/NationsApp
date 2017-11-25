@@ -38,7 +38,11 @@ public class InfoList extends Activity{
     private List<Info> Infos;
     private MyDataBase dbhelper = new MyDataBase(InfoList.this,"t_db",null,1);
     private String current_sql_obeject = "全部"; //当前查询的范围
+    //搜索组
+    private Button serchbutton;
+    private EditText serchtext;
 
+    //单选组
     private RadioGroup radiogroup;
     private RadioButton radioall;
     private RadioButton radiowei;
@@ -53,7 +57,7 @@ public class InfoList extends Activity{
     private EditText dialognation;
     private EditText dialoginformation;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_list);
 
@@ -66,7 +70,20 @@ public class InfoList extends Activity{
         mRecycleView = (RecyclerView) findViewById(R.id.recyclerview);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this)); //垂直布局
         //从数据库中添加数据到List中
-        updateUI(current_sql_obeject);
+        updateUI(current_sql_obeject,0);
+
+        //搜索按钮
+        serchbutton = (Button) findViewById(R.id.setch_button);
+        serchtext = (EditText) findViewById(R.id.serch_text);
+        serchbutton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                if(serchtext.length()!=0){
+                    String keyword = serchtext.getText().toString();
+                    updateUI(keyword,1);
+                }
+            }
+        });
 
         //单选组
         radiogroup = (RadioGroup) findViewById(R.id.radiogroup);
@@ -104,13 +121,12 @@ public class InfoList extends Activity{
             bgwu.setVisibility(View.VISIBLE);
 
         }
-
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkID) {
                 if(checkID==radioall.getId()){
                     current_sql_obeject = (String) radioall.getText();
-                    updateUI(current_sql_obeject);
+                    updateUI(current_sql_obeject,0);
                     //切换背景图
                     bgsanguo.setVisibility(View.VISIBLE);
                     bgwei.setVisibility(View.GONE);
@@ -119,7 +135,7 @@ public class InfoList extends Activity{
                 }
                 else if(checkID==radiowei.getId()){
                     current_sql_obeject = (String) radiowei.getText(); //不同查询范围
-                    updateUI(current_sql_obeject); //更新查询结果到UI
+                    updateUI(current_sql_obeject,0); //更新查询结果到UI
                     //切换
                     bgsanguo.setVisibility(View.GONE);
                     bgwei.setVisibility(View.VISIBLE);
@@ -128,7 +144,7 @@ public class InfoList extends Activity{
                 }
                 else if(checkID==radioshu.getId()){
                     current_sql_obeject = (String) radioshu.getText();
-                    updateUI(current_sql_obeject);
+                    updateUI(current_sql_obeject,0);
                     //切换
                     bgsanguo.setVisibility(View.GONE);
                     bgwei.setVisibility(View.GONE);
@@ -137,7 +153,7 @@ public class InfoList extends Activity{
                 }
                 else if(checkID==radiowu.getId()){
                     current_sql_obeject = (String) radiowu.getText();
-                    updateUI(current_sql_obeject);
+                    updateUI(current_sql_obeject,0);
                     //切换
                     bgsanguo.setVisibility(View.GONE);
                     bgwei.setVisibility(View.GONE);
@@ -211,17 +227,17 @@ public class InfoList extends Activity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode==2 && resultCode==22){
-            updateUI(current_sql_obeject); //更新UI
+            updateUI(current_sql_obeject,0); //更新UI
         }
     }
 
     //从数据库中更新数据到UI界面
-    public void updateUI(String current_sql_obeject){
+    public void updateUI(String sql_obeject,int diff){
         try{
-            if (current_sql_obeject.equals("全部")){
+            if ((diff==0) && (sql_obeject.equals("全部")) ){
                 Infos = new ArrayList<Info>();
-                SQLiteDatabase db1=dbhelper.getReadableDatabase();
-                Cursor cursor = db1.rawQuery("select * from t_table",null); //查询
+                SQLiteDatabase sq1=dbhelper.getReadableDatabase();
+                Cursor cursor = sq1.rawQuery("select * from t_table",null); //查询
                 for(cursor.moveToFirst();!(cursor.isAfterLast());cursor.moveToNext()){
                     Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
                             cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor.getColumnIndex("live")),
@@ -229,38 +245,12 @@ public class InfoList extends Activity{
                             cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),0);
                     Infos.add(in);
                 }
-                db1.close();
-                myAdapter = new MyAdapter(this, Infos);
-                /*  网上的库 添加动画  */
-                ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(myAdapter);
-                animationAdapter.setDuration(1000);
-                mRecycleView.setAdapter(animationAdapter);
-                mRecycleView.setItemAnimator(new OvershootInLeftAnimator());
-                myAdapter.setOnItemClickLitener(new MyAdapter.OnItemClickLitener()
-                {
-                    //点击事件 跳转InfoDetail
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(InfoList.this, InfoDetail.class); //显式调用
-                        Info temp = Infos.get(position); //第i个Info商品信息
-                        intent.putExtra("Info", temp);
-                        startActivityForResult(intent,2);
-                    }
-                    //长按事件
-                    @Override
-                    public boolean onItemLongClick(View view, final int position) {
-                        Toast.makeText(InfoList.this, "词条已被删除",Toast.LENGTH_SHORT).show();
-                        Infos.remove(position);
-                        myAdapter.notifyDataSetChanged();
-                        return true;
-                    }
-
-                });
+                sq1.close();
             }
-            else{
+            else if(diff==0){
                 Infos = new ArrayList<Info>();
-                SQLiteDatabase db2=dbhelper.getReadableDatabase();
-                Cursor cursor = db2.rawQuery("select * from t_table where nation='" +current_sql_obeject+ "';" ,null); //查询
+                SQLiteDatabase sq2=dbhelper.getReadableDatabase();
+                Cursor cursor = sq2.rawQuery("select * from t_table where nation='" +sql_obeject+ "';" ,null); //查询
                 for(cursor.moveToFirst();!(cursor.isAfterLast());cursor.moveToNext()){
                     Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
                             cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor.getColumnIndex("live")),
@@ -268,34 +258,49 @@ public class InfoList extends Activity{
                             cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),0);
                     Infos.add(in);
                 }
-                db2.close();
-                myAdapter = new MyAdapter(this, Infos);
-                /*  网上的库 添加动画  */
-                ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(myAdapter);
-                animationAdapter.setDuration(1000);
-                mRecycleView.setAdapter(animationAdapter);
-                mRecycleView.setItemAnimator(new OvershootInLeftAnimator());
-                myAdapter.setOnItemClickLitener(new MyAdapter.OnItemClickLitener()
-                {
-                    //点击事件 跳转InfoDetail
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(InfoList.this, InfoDetail.class); //显式调用
-                        Info temp = Infos.get(position); //第i个Info商品信息
-                        intent.putExtra("Info", temp);
-                        startActivityForResult(intent,2);
-                    }
-                    //长按事件
-                    @Override
-                    public boolean onItemLongClick(View view, final int position) {
-                        Toast.makeText(InfoList.this, "词条已被删除",Toast.LENGTH_SHORT).show();
-                        Infos.remove(position);
-                        myAdapter.notifyDataSetChanged();
-                        return true;
-                    }
-
-                });
+                sq2.close();
             }
+            else if(diff==1){
+                Infos = new ArrayList<Info>();
+                SQLiteDatabase sqLiteDatabase=dbhelper.getReadableDatabase();
+                Cursor cursor = sqLiteDatabase.rawQuery("select * from t_table"+
+                                "where nation='" +sql_obeject+ "' or name like \"% "+sql_obeject+" \";"
+                        ,null); //关键字查询
+                for(cursor.moveToFirst();!(cursor.isAfterLast());cursor.moveToNext()){
+                    Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
+                            cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor.getColumnIndex("live")),
+                            cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
+                            cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),0);
+                    Infos.add(in);
+                }
+                sqLiteDatabase.close();
+            }
+            myAdapter = new MyAdapter(this, Infos);
+                /*  网上的库 添加动画  */
+            ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(myAdapter);
+            animationAdapter.setDuration(1000);
+            mRecycleView.setAdapter(animationAdapter);
+            mRecycleView.setItemAnimator(new OvershootInLeftAnimator());
+            myAdapter.setOnItemClickLitener(new MyAdapter.OnItemClickLitener()
+            {
+                //点击事件 跳转InfoDetail
+                @Override
+                public void onItemClick(View view, int position) {
+                    Intent intent = new Intent(InfoList.this, InfoDetail.class); //显式调用
+                    Info temp = Infos.get(position); //第i个Info商品信息
+                    intent.putExtra("Info", temp);
+                    startActivityForResult(intent,2);
+                }
+                //长按事件
+                @Override
+                public boolean onItemLongClick(View view, final int position) {
+                    Toast.makeText(InfoList.this, "词条已被删除",Toast.LENGTH_SHORT).show();
+                    Infos.remove(position);
+                    myAdapter.notifyDataSetChanged();
+                    return true;
+                }
+
+            });
         }catch (SQLException e){}
     }
 
