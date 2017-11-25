@@ -68,14 +68,6 @@ public class InfoList extends Activity{
         //从数据库中添加数据到List中
         updateUI(current_sql_obeject);
 
-        Button btnback = (Button) findViewById(R.id.fanhui);
-        btnback.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                finish();
-            }
-        });
-
         //单选组
         radiogroup = (RadioGroup) findViewById(R.id.radiogroup);
         radioall = (RadioButton) findViewById(R.id.radio0);
