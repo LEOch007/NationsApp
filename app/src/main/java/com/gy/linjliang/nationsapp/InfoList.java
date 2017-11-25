@@ -45,6 +45,9 @@ public class InfoList extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_list);
 
+        String guojia = (String) getIntent().getSerializableExtra("countryname"); // 接收
+        current_sql_obeject=guojia; //限定范围
+
         //数据库数据初始化
         initdata();
         /*    --- RecyclerView ---  */
@@ -53,25 +56,12 @@ public class InfoList extends Activity{
         //从数据库中添加数据到List中
         updateUI(current_sql_obeject);
 
-        myAdapter.setOnItemClickLitener(new MyAdapter.OnItemClickLitener()
-        {
-            //点击事件 跳转InfoDetail
+        Button btnback = (Button) findViewById(R.id.fanhui);
+        btnback.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(InfoList.this, InfoDetail.class); //显式调用
-                Info temp = Infos.get(position); //第i个Info商品信息
-                intent.putExtra("Info", temp);
-                startActivityForResult(intent,2);
+            public void onClick(View view){
+                finish();
             }
-            //长按事件
-            @Override
-            public boolean onItemLongClick(View view, final int position) {
-                Toast.makeText(InfoList.this, "词条已被删除",Toast.LENGTH_SHORT).show();
-                Infos.remove(position);
-                myAdapter.notifyDataSetChanged();
-                return true;
-            }
-
         });
 
         //单选组
@@ -84,6 +74,32 @@ public class InfoList extends Activity{
         final ImageView bgwei = (ImageView) findViewById(R.id.bg_wei);
         final ImageView bgshu = (ImageView) findViewById(R.id.bg_shu);
         final ImageView bgwu = (ImageView) findViewById(R.id.bg_wu);
+        //设置按钮被点击
+        if(guojia.equals("魏")){
+            radiowei.setChecked(true);
+            //切换
+            bgsanguo.setVisibility(View.GONE);
+            bgwei.setVisibility(View.VISIBLE);
+            bgshu.setVisibility(View.GONE);
+            bgwu.setVisibility(View.GONE);
+        }
+        else if(guojia.equals("蜀")){
+            radioshu.setChecked(true);
+            //切换
+            bgsanguo.setVisibility(View.GONE);
+            bgwei.setVisibility(View.GONE);
+            bgshu.setVisibility(View.VISIBLE);
+            bgwu.setVisibility(View.GONE);
+        }
+        else if(guojia.equals("吴")){
+            radiowu.setChecked(true);
+            //切换
+            bgsanguo.setVisibility(View.GONE);
+            bgwei.setVisibility(View.GONE);
+            bgshu.setVisibility(View.GONE);
+            bgwu.setVisibility(View.VISIBLE);
+
+        }
 
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -158,6 +174,26 @@ public class InfoList extends Activity{
                 animationAdapter.setDuration(1000);
                 mRecycleView.setAdapter(animationAdapter);
                 mRecycleView.setItemAnimator(new OvershootInLeftAnimator());
+                myAdapter.setOnItemClickLitener(new MyAdapter.OnItemClickLitener()
+                {
+                    //点击事件 跳转InfoDetail
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(InfoList.this, InfoDetail.class); //显式调用
+                        Info temp = Infos.get(position); //第i个Info商品信息
+                        intent.putExtra("Info", temp);
+                        startActivityForResult(intent,2);
+                    }
+                    //长按事件
+                    @Override
+                    public boolean onItemLongClick(View view, final int position) {
+                        Toast.makeText(InfoList.this, "词条已被删除",Toast.LENGTH_SHORT).show();
+                        Infos.remove(position);
+                        myAdapter.notifyDataSetChanged();
+                        return true;
+                    }
+
+                });
             }
             else{
                 Infos = new ArrayList<Info>();
@@ -177,6 +213,26 @@ public class InfoList extends Activity{
                 animationAdapter.setDuration(1000);
                 mRecycleView.setAdapter(animationAdapter);
                 mRecycleView.setItemAnimator(new OvershootInLeftAnimator());
+                myAdapter.setOnItemClickLitener(new MyAdapter.OnItemClickLitener()
+                {
+                    //点击事件 跳转InfoDetail
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(InfoList.this, InfoDetail.class); //显式调用
+                        Info temp = Infos.get(position); //第i个Info商品信息
+                        intent.putExtra("Info", temp);
+                        startActivityForResult(intent,2);
+                    }
+                    //长按事件
+                    @Override
+                    public boolean onItemLongClick(View view, final int position) {
+                        Toast.makeText(InfoList.this, "词条已被删除",Toast.LENGTH_SHORT).show();
+                        Infos.remove(position);
+                        myAdapter.notifyDataSetChanged();
+                        return true;
+                    }
+
+                });
             }
         }catch (SQLException e){}
     }

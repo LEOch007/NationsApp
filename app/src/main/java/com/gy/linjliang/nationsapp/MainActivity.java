@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean tag=false; //点击浮动按钮变化
     private FloatingActionButton mfab; //浮动按钮
     private RecyclerView mshoucangjia; //收藏夹
-    private MyAdapter myAdapter;
+    private MyAdapter shoucangAdapter;
     private List<Info> shoucangList; //收藏夹的List
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,45 +69,11 @@ public class MainActivity extends AppCompatActivity {
 
         /*    --- RecyclerView ---  */
         shoucangList = new ArrayList<Info>();
+//        shoucangList.add(new Info(R.mipmap.caocao,"haha","ha","ha","haha","hah","ahah",2,0));
         mshoucangjia =(RecyclerView) findViewById(R.id.shoucangjia);
         mshoucangjia.setLayoutManager(new LinearLayoutManager(this)); //垂直布局
-        myAdapter = new MyAdapter(this, shoucangList);
-        /*  网上的库 添加动画  */
-        ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(myAdapter);
-        animationAdapter.setDuration(1000);
-        mshoucangjia.setAdapter(animationAdapter);
-        mshoucangjia.setItemAnimator(new OvershootInLeftAnimator());
-        myAdapter.setOnItemClickLitener(new MyAdapter.OnItemClickLitener()
-        {
-            //点击事件
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(MainActivity.this, InfoDetail.class); //显式调用
-                Info temp = shoucangList.get(position); //第i个Info商品信息
-                intent.putExtra("Info", temp);
-                startActivityForResult(intent,1);
-            }
-            //长按事件
-            @Override
-            public boolean onItemLongClick(View view, final int position) {
-                //简单对话框的设计
-                AlertDialog.Builder message = new AlertDialog.Builder(MainActivity.this);
-                message.setTitle("移除收藏词条");
-                message.setMessage("从收藏夹中移除" + shoucangList.get(position).getName()+"？");
-                message.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {}
-                });
-                message.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        shoucangList.remove(position);
-                        myAdapter.notifyDataSetChanged();
-                    }
-                });
-                message.create().show();
-                return true;
-            }
-
-        });
+        //recyclerView 添加内容
+        udateUI();
 
         //浮动按钮
         final TextView tubiao = (TextView)findViewById(R.id.tubiao);
@@ -152,6 +118,48 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().register(this); //订阅消息
 
     }
+    //更新UI函数
+    public void udateUI(){
+        shoucangAdapter = new MyAdapter(this, shoucangList);
+        /*  网上的库 添加动画  */
+        ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(shoucangAdapter);
+        animationAdapter.setDuration(1000);
+        mshoucangjia.setAdapter(animationAdapter);
+        mshoucangjia.setItemAnimator(new OvershootInLeftAnimator());
+        shoucangAdapter.setOnItemClickLitener(new MyAdapter.OnItemClickLitener()
+        {
+            //点击事件
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(MainActivity.this, InfoDetail.class); //显式调用
+                Info temp = shoucangList.get(position); //第i个Info商品信息
+                intent.putExtra("Info", temp);
+                startActivityForResult(intent,1);
+            }
+            //长按事件
+            @Override
+            public boolean onItemLongClick(View view, final int position) {
+                //简单对话框的设计
+                AlertDialog.Builder message = new AlertDialog.Builder(MainActivity.this);
+                message.setTitle("移除收藏词条");
+                message.setMessage("从收藏夹中移除" + shoucangList.get(position).getName()+"？");
+                message.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {}
+                });
+                message.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        shoucangList.remove(position);
+                        shoucangAdapter.notifyDataSetChanged();
+                    }
+                });
+                message.create().show();
+                return true;
+            }
+
+        });
+    }
+
+
     //取消订阅
     @Override
     protected void onDestroy(){
@@ -161,7 +169,9 @@ public class MainActivity extends AppCompatActivity {
     //订阅方法
     @Subscribe(threadMode = ThreadMode.MAIN) //选择线程模式
     public void onMessageEvent(Info ren){
+//        Toast.makeText(MainActivity.this,ren.getName(),Toast.LENGTH_LONG).show();
+//        shoucangList.add(new Info(R.mipmap.caocao,"haha","ha","ha","haha","hah","ahah",2,0));
         shoucangList.add(ren);
-        myAdapter.notifyDataSetChanged();
+        udateUI();
     }
 }
