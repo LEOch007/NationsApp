@@ -27,7 +27,7 @@ public class InfoList extends Activity{
     private RecyclerView mRecycleView;
     private MyAdapter myAdapter;
     private List<Info> Infos;
-    private MyDataBase dbhelper = new MyDataBase(InfoList.this,"t_db",null,1);
+    private MyDataBase dbhelper = new MyDataBase(getBaseContext());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +43,7 @@ public class InfoList extends Activity{
             Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
                     cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor.getColumnIndex("live")),
                     cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
-                    cursor.getString(cursor.getColumnIndex("information")));
+                    cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),0);
             Infos.add(in);
         }
 

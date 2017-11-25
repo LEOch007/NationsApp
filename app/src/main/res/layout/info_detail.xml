@@ -13,12 +13,11 @@
 
         <ImageView
             android:id="@+id/ren_touxiang"
-            android:src="@mipmap/caocao"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            />
+            android:src="@mipmap/caocao" />
 
         <Button
             android:id="@+id/back"
@@ -36,29 +35,27 @@
             android:layout_marginBottom="15dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="5dp"
-            android:background="@mipmap/empty_star"
-            />
+            android:background="@mipmap/empty_star" />
 
         <Button
             android:id="@+id/xiugaibutton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="5dp"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:layout_marginEnd="12dp"
-            android:background="@drawable/circle_shape"
-            />
+            android:layout_marginTop="5dp"
+            android:background="@drawable/circle_shape" />
 
         <TextView
             android:id="@+id/ren_name"
-            android:text="@string/caocao_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="15dp"
             android:layout_marginStart="10dp"
+            android:text="@string/caocao_name"
             android:textColor="@android:color/black"
             android:textSize="25sp" />
     </RelativeLayout>

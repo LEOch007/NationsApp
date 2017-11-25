@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 
 public class Info implements Serializable {
+    private int id; //唯一标识
     private int imageindex; //头像
     private String name; //姓名
     private String sex; //性别
@@ -14,8 +15,9 @@ public class Info implements Serializable {
     private String place; //籍贯
     private String nation; //主效势力
     private String information; //其他信息
+    private int flag; //加入购物车标记
 
-    public Info(int index,String name, String sex, String live, String place,String nation,String information) {
+    public Info(int index,String name, String sex, String live, String place,String nation,String information,int id,int flag) {
         this.imageindex = index;
         this.name = name;
         this.sex = sex;
@@ -23,8 +25,13 @@ public class Info implements Serializable {
         this.place = place;
         this.nation = nation;
         this.information = information;
+        this.id = id;
+        this.flag = flag;
     }
 
+    public int getId() {
+        return id;
+    } //ID号
     public int getImageindex(){return imageindex;}  //人物头像
     public String getName(){
         return name;
@@ -40,5 +47,6 @@ public class Info implements Serializable {
     public String getInformation(){
         return information;
     }  //其他信息
+    public int getFlag(){ return flag; }
 
 }
