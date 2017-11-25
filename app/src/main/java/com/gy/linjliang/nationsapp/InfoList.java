@@ -78,15 +78,6 @@ public class InfoList extends Activity{
 
         });
 
-        //返回键的点击事件
-        Button back = (Button) findViewById(R.id.backbutton); //返回键
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
     }
 
     private void initdata(){

@@ -6,16 +6,60 @@
     android:layout_height="match_parent"
     >
 
-    <Button
-        android:id="@+id/backbutton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@mipmap/back"
-        android:layout_marginLeft="10dp"
+    <ImageView
+        android:id="@+id/bg_sanguo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/info_list_sanguo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="10dp" />
+        app:layout_constraintVertical_bias="0.545" />
+
+    <ImageView
+        android:id="@+id/bg_wei"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:scaleType="fitXY"
+        android:src="@mipmap/info_list_wei"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.545" />
+
+    <ImageView
+        android:id="@+id/bg_shu"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:scaleType="fitXY"
+        android:src="@mipmap/info_list_shu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.545" />
+
+    <ImageView
+        android:id="@+id/bg_wu"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:scaleType="fitXY"
+        android:src="@mipmap/info_list_wu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.545" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/zengjiabutton"
@@ -37,8 +81,10 @@
         android:id="@+id/recyclerview"
         android:layout_width="392dp"
         android:layout_height="555dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/zengjiabutton"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginStart="8dp" />
