@@ -20,6 +20,7 @@ public class MyDataBase extends SQLiteOpenHelper {
         this(context, DB_NAME, null, DB_VERSION);
     }
 
+    //初始化数据库
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql="create table if not exists t_table" +

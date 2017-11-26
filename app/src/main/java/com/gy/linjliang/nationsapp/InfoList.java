@@ -92,7 +92,7 @@ public class InfoList extends Activity{
         //从数据库中添加数据到List中
         updateUI(current_sql_obeject,0);
 
-        //单选组
+        /*           ------ 单选组 ------                 */
         radiogroup = (RadioGroup) findViewById(R.id.radiogroup);
         radioall = (RadioButton) findViewById(R.id.radio0);
         radiowei = (RadioButton) findViewById(R.id.radio1);
@@ -170,7 +170,7 @@ public class InfoList extends Activity{
             }
         });
 
-        //搜索按钮
+        /*         -------- 搜索按钮 --------             */
         serchbutton = (ImageView) findViewById(R.id.setch_button);
         serchtext = (EditText) findViewById(R.id.serch_text);
         serchbutton.setOnClickListener(new View.OnClickListener(){
@@ -190,7 +190,7 @@ public class InfoList extends Activity{
             }
         });
 
-        //增加按钮
+        /*      -----     增加按钮  ---------  */
         ImageView zengjiabutton = (ImageView)findViewById(R.id.add_btn);
         zengjiabutton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -213,34 +213,24 @@ public class InfoList extends Activity{
                 builder.setPositiveButton("保存修改", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if ((dialogname.length()==0) && (dialogsex.length() == 0) &&
-                                (dialoglive.length() == 0) && (dialogplace.length() == 0) &&
-                                (dialoginformation.length() == 0))
+                        if ((dialogname.length()==0) || (dialogsex.length() == 0) ||
+                                (dialoglive.length() == 0) || (dialogplace.length() == 0) ||
+                                (dialognation.length() == 0) || (dialoginformation.length() == 0))
                         {
                             Toast.makeText(InfoList.this,"人物信息不能为空",Toast.LENGTH_SHORT).show();
                         }
                         else{
                             MyDataBase db = new MyDataBase(getBaseContext());
                             SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-                            sqLiteDatabase.execSQL("insert into t_table(name,sex,live,place,nation,information,image,imagebitmap,flag)"+
-                                    "values("+dialogname.getText().toString()+","+dialogsex.getText().toString()+","+dialoglive.getText().toString()
-                                            +","+dialogplace.getText().toString()+","+dialoginformation.getText().toString()+","+uploda_pic+","+
-                                    0+");"
+                            sqLiteDatabase.execSQL("insert into t_table(name,sex,live,place,nation,information,image,imagebitmap,flag) "+
+                                    "values(?,?,?,?,?,?,?,?,?);",new Object[]{dialogname.getText().toString(),dialogsex.getText().toString(),
+                                    dialoglive.getText().toString(),dialogplace.getText().toString(),dialognation.getText().toString(),
+                                    dialoginformation.getText().toString(),R.mipmap.ic_launcher,0}
                             ); //插入语句
                             sqLiteDatabase.close();
-
+                            updateUI(current_sql_obeject,0);//更新到当前UI上
+                            Toast.makeText(InfoList.this,"人物信息已添加",Toast.LENGTH_SHORT).show();
                         }
-//                        if (dialogname.length() != 0) {
-//                            MyDataBase db = new MyDataBase(getBaseContext());
-//                            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-//                            sqLiteDatabase.execSQL("update t_table" +
-//                                    " set name = ? where id = ?", new Object[]{
-//                                    dialogname.getText().toString(), p.getId()});
-//                            sqLiteDatabase.close();
-//                        }
-
-//                        dataUpdate();//更新到当前UI上
-                        Toast.makeText(InfoList.this,"人物信息已添加",Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("放弃修改", new DialogInterface.OnClickListener() {
@@ -357,7 +347,7 @@ public class InfoList extends Activity{
         }
     }
 
-    //从数据库中更新数据到UI界面
+    //从数据库中更新数据到UI界面 diff=1 表示关键字查找
     public void updateUI(String sql_obeject,int diff){
         try{
             if ((diff==0) && (sql_obeject.equals("全部")) ){
@@ -449,6 +439,7 @@ public class InfoList extends Activity{
         }catch (SQLException e){}
     }
 
+    //初始化数据库中的数据
     private void initdata(){
 
         SQLiteDatabase db = dbhelper.getWritableDatabase();

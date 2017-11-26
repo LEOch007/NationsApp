@@ -15,8 +15,9 @@ public class Info implements Serializable {
     private String place; //籍贯
     private String nation; //主效势力
     private String information; //其他信息
-    private int flag; //加入购物车标记
+    private int flag; //加入收藏夹标记
 
+    //todo String imagepath
     public Info(int index,String name, String sex, String live, String place,String nation,String information,int id,int flag) {
         this.imageindex = index;
         this.name = name;

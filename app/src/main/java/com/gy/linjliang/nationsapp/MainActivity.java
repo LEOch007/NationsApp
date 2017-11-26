@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /*    --- RecyclerView ---  */
         shoucangList = new ArrayList<Info>();
-//        shoucangList.add(new Info(R.mipmap.caocao,"haha","ha","ha","haha","hah","ahah",2,0));
         mshoucangjia =(RecyclerView) findViewById(R.id.shoucangjia);
         mshoucangjia.setLayoutManager(new LinearLayoutManager(this)); //垂直布局
         //recyclerView 添加内容
@@ -128,11 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            }
 //        });
 
-        /*     ------   注册订阅者  -------   */
-        EventBus.getDefault().register(this); //订阅消息
-
         //音乐播放器
-
         music_on=(ImageView) findViewById(R.id.music_on);
         music_off=(ImageView) findViewById(R.id.music_off);
         music_on.setOnClickListener(this);
@@ -144,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
     //更新UI函数
     public void udateUI(){
         shoucangAdapter = new MyAdapter(this, shoucangList);
@@ -185,22 +181,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-
-    //取消订阅
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-    //订阅方法
-    @Subscribe(threadMode = ThreadMode.MAIN) //选择线程模式
-    public void onMessageEvent(Info ren){
-//        Toast.makeText(MainActivity.this,ren.getName(),Toast.LENGTH_LONG).show();
-//        shoucangList.add(new Info(R.mipmap.caocao,"haha","ha","ha","haha","hah","ahah",2,0));
-        shoucangList.add(ren);
-        udateUI();
-    }
-
     //初始化音乐播放器
     private void initMediaPlayer(){
         try{
@@ -211,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
     }
-
     //动态申请权限
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -231,9 +210,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
-
-
     //按钮
     @Override
     public void onClick(View v) {

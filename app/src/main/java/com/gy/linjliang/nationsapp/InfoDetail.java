@@ -50,7 +50,7 @@ public class InfoDetail extends Activity {
         setContentView(R.layout.info_detail);
 
         p = (Info) getIntent().getSerializableExtra("Info"); // 接收
-//        Toast.makeText(InfoDetail.this,""+p.getId(),Toast.LENGTH_LONG).show();
+
         //添加各内容
         ima = (ImageView)findViewById(R.id.ren_touxiang);
         ima.setImageResource(p.getImageindex());    //头像图片
@@ -70,7 +70,7 @@ public class InfoDetail extends Activity {
         if(p.getFlag()==0){shoucangstar.setBackground(getDrawable(R.mipmap.empty_star));}
         else {shoucangstar.setBackground(getDrawable(R.mipmap.full_star));}
 
-        //加入收藏夹
+        /*    ------  加入收藏夹 ------   */
         shoucangstar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,11 +90,11 @@ public class InfoDetail extends Activity {
             }
         });
 
+        /*     ------   修改按钮 ----------- */
         ImageView xiugai =(ImageView) findViewById(R.id.modify_btn);
         xiugai.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-//                Toast.makeText(InfoDetail.this,p.getName(),Toast.LENGTH_LONG).show();
                 // 自定义对话框的实现——使用 LayoutInflater 类
                 LayoutInflater factory = LayoutInflater.from(InfoDetail.this);
                 View newView = factory.inflate(R.layout.dialoglayout, null);
@@ -197,7 +197,6 @@ public class InfoDetail extends Activity {
             SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
             Cursor cursor = sqLiteDatabase.rawQuery("select * from t_table where id=" + p.getId(), null); //查询
             for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
-//                Toast.makeText(InfoDetail.this, cursor.getString(cursor.getColumnIndex("name")), Toast.LENGTH_LONG).show();
                 renname.setText(cursor.getString(cursor.getColumnIndex("name")));
                 rensex.setText(cursor.getString(cursor.getColumnIndex("sex")));
                 renlive.setText(cursor.getString(cursor.getColumnIndex("live")));
