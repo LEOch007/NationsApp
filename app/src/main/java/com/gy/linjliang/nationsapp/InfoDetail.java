@@ -34,6 +34,7 @@ public class InfoDetail extends Activity {
     private TextView renplace;
     private TextView rennation;
     private TextView reninformation;
+    private Button shoucangstar;
 
     //对话框
     private EditText dialogname;
@@ -49,6 +50,7 @@ public class InfoDetail extends Activity {
         setContentView(R.layout.info_detail);
 
         p = (Info) getIntent().getSerializableExtra("Info"); // 接收
+//        Toast.makeText(InfoDetail.this,""+p.getId(),Toast.LENGTH_LONG).show();
         //添加各内容
         ima = (ImageView)findViewById(R.id.ren_touxiang);
         ima.setImageResource(p.getImageindex());    //头像图片
@@ -64,23 +66,27 @@ public class InfoDetail extends Activity {
         rennation.setText(p.getNation());   //国家
         reninformation = (TextView)findViewById(R.id.ren_information);
         reninformation.setText(p.getInformation());   //信息
+        shoucangstar = (Button) findViewById(R.id.star);
+        if(p.getFlag()==0){shoucangstar.setBackground(getDrawable(R.mipmap.empty_star));}
+        else {shoucangstar.setBackground(getDrawable(R.mipmap.full_star));}
 
         //加入收藏夹
-        final Button star = (Button) findViewById(R.id.star);
-        star.setOnClickListener(new View.OnClickListener() {
+        shoucangstar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!tag) {
-                    star.setBackground(getDrawable(R.mipmap.full_star));
-                    tag = true;
-                    Toast.makeText(InfoDetail.this,"已加入收藏夹",Toast.LENGTH_SHORT).show();
-                    /*    ---- 发布消息 ----     */
-                    EventBus.getDefault().post(p); //发布者 发布消息
-
+                MyDataBase db = new MyDataBase(getBaseContext());
+                SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+                if (p.getFlag()==0) {
+                    shoucangstar.setBackground(getDrawable(R.mipmap.full_star));
+                    sqLiteDatabase.execSQL("update t_table set flag="+1+" where id="+p.getId());
+                    Toast.makeText(InfoDetail.this,"加入收藏夹",Toast.LENGTH_SHORT).show();
                 } else {
-                    star.setBackground(getDrawable(R.mipmap.empty_star));
-                    tag = false;
+                    shoucangstar.setBackground(getDrawable(R.mipmap.empty_star));
+                    sqLiteDatabase.execSQL("update t_table set flag="+0+" where id="+p.getId());
+                    Toast.makeText(InfoDetail.this,"移除收藏夹",Toast.LENGTH_SHORT).show();
                 }
+                sqLiteDatabase.close();
+                setResult(22, new Intent());
             }
         });
 
@@ -118,57 +124,59 @@ public class InfoDetail extends Activity {
                         if (dialogname.length()==0) {
                             Toast.makeText(InfoDetail.this,"名字不能为空",Toast.LENGTH_SHORT).show();
                         }
-                        if (dialogname.length() != 0) {
-                            MyDataBase db = new MyDataBase(getBaseContext());
-                            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-                            sqLiteDatabase.execSQL("update t_table" +
-                                    " set name = ? where id = ?", new Object[]{
-                                    dialogname.getText().toString(), p.getId()});
-                            sqLiteDatabase.close();
+                        else {
+                            if (dialogname.length() != 0) {
+                                MyDataBase db = new MyDataBase(getBaseContext());
+                                SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+                                sqLiteDatabase.execSQL("update t_table" +
+                                        " set name = ? where id = ?", new Object[]{
+                                        dialogname.getText().toString(), p.getId()});
+                                sqLiteDatabase.close();
+                            }
+                            if (dialogsex.length() != 0) {
+                                MyDataBase db = new MyDataBase(getBaseContext());
+                                SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+                                sqLiteDatabase.execSQL("update t_table" +
+                                        " set sex = ? where id = ?", new Object[]{
+                                        dialogsex.getText().toString(), p.getId()});
+                                sqLiteDatabase.close();
+                            }
+                            if (dialoglive.length() != 0) {
+                                MyDataBase db = new MyDataBase(getBaseContext());
+                                SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+                                sqLiteDatabase.execSQL("update t_table" +
+                                        " set live = ? where id = ?", new Object[]{
+                                        dialoglive.getText().toString(), p.getId()});
+                                sqLiteDatabase.close();
+                            }
+                            if (dialogplace.length() != 0) {
+                                MyDataBase db = new MyDataBase(getBaseContext());
+                                SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+                                sqLiteDatabase.execSQL("update t_table" +
+                                        " set place = ? where id = ?", new Object[]{
+                                        dialogplace.getText().toString(), p.getId()});
+                                sqLiteDatabase.close();
+                            }
+                            if (dialognation.length() != 0) {
+                                MyDataBase db = new MyDataBase(getBaseContext());
+                                SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+                                sqLiteDatabase.execSQL("update t_table" +
+                                        " set nation = ? where id = ?", new Object[]{
+                                        dialognation.getText().toString(), p.getId()});
+                                sqLiteDatabase.close();
+                            }
+                            if (dialoginformation.length() != 0) {
+                                MyDataBase db = new MyDataBase(getBaseContext());
+                                SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+                                sqLiteDatabase.execSQL("update t_table" +
+                                        " set information = ? where id = ?", new Object[]{
+                                        dialoginformation.getText().toString(), p.getId()});
+                                sqLiteDatabase.close();
+                            }
+                            dataUpdate();//更新到当前UI上
+                            Toast.makeText(InfoDetail.this, "人物信息已修改", Toast.LENGTH_SHORT).show();
+                            setResult(22, new Intent());
                         }
-                        if (dialogsex.length() != 0) {
-                            MyDataBase db = new MyDataBase(getBaseContext());
-                            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-                            sqLiteDatabase.execSQL("update t_table" +
-                                    " set sex = ? where id = ?", new Object[]{
-                                    dialogsex.getText().toString(), p.getId()});
-                            sqLiteDatabase.close();
-                        }
-                        if (dialoglive.length() != 0) {
-                            MyDataBase db = new MyDataBase(getBaseContext());
-                            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-                            sqLiteDatabase.execSQL("update t_table" +
-                                    " set live = ? where id = ?", new Object[]{
-                                    dialoglive.getText().toString(), p.getId()});
-                            sqLiteDatabase.close();
-                        }
-                        if (dialogplace.length() != 0) {
-                            MyDataBase db = new MyDataBase(getBaseContext());
-                            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-                            sqLiteDatabase.execSQL("update t_table" +
-                                    " set place = ? where id = ?", new Object[]{
-                                    dialogplace.getText().toString(), p.getId()});
-                            sqLiteDatabase.close();
-                        }
-                        if (dialognation.length() != 0) {
-                            MyDataBase db = new MyDataBase(getBaseContext());
-                            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-                            sqLiteDatabase.execSQL("update t_table" +
-                                    " set nation = ? where id = ?", new Object[]{
-                                    dialognation.getText().toString(), p.getId()});
-                            sqLiteDatabase.close();
-                        }
-                        if (dialoginformation.length() != 0) {
-                            MyDataBase db = new MyDataBase(getBaseContext());
-                            SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-                            sqLiteDatabase.execSQL("update t_table" +
-                                    " set information = ? where id = ?", new Object[]{
-                                    dialoginformation.getText().toString(), p.getId()});
-                            sqLiteDatabase.close();
-                        }
-                        dataUpdate();//更新到当前UI上
-                        Toast.makeText(InfoDetail.this,"人物信息已修改",Toast.LENGTH_SHORT).show();
-                        setResult(22,new Intent());
                     }
                 });
                 builder.setNegativeButton("放弃修改", new DialogInterface.OnClickListener() {

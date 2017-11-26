@@ -1,15 +1,27 @@
 package com.gy.linjliang.nationsapp;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +50,9 @@ public class InfoList extends Activity{
     private List<Info> Infos;
     private MyDataBase dbhelper = new MyDataBase(InfoList.this,"t_db",null,1);
     private String current_sql_obeject = "全部"; //当前查询的范围
+
+    private String uploda_pic;
+
     //搜索组
     private ImageView serchbutton;
     private EditText serchtext;
@@ -56,6 +71,11 @@ public class InfoList extends Activity{
     private EditText dialogplace;
     private EditText dialognation;
     private EditText dialoginformation;
+
+    private Button btchoose;
+    public  static final int CHOOSE_PHOTO=24;
+    private ImageView picture;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,19 +91,6 @@ public class InfoList extends Activity{
         mRecycleView.setLayoutManager(new LinearLayoutManager(this)); //垂直布局
         //从数据库中添加数据到List中
         updateUI(current_sql_obeject,0);
-
-        //搜索按钮
-        serchbutton = (ImageView) findViewById(R.id.search_btn);
-        serchtext = (EditText) findViewById(R.id.search_text);
-        serchbutton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                if(serchtext.length()!=0){
-                    String keyword = serchtext.getText().toString();
-                    updateUI(keyword,1);
-                }
-            }
-        });
 
         //单选组
         radiogroup = (RadioGroup) findViewById(R.id.radiogroup);
@@ -163,6 +170,26 @@ public class InfoList extends Activity{
             }
         });
 
+        //搜索按钮
+        serchbutton = (ImageView) findViewById(R.id.setch_button);
+        serchtext = (EditText) findViewById(R.id.serch_text);
+        serchbutton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                if(serchtext.length()!=0){
+                    String keyword = serchtext.getText().toString();
+                    radioall.setChecked(true);
+                    //切换背景图
+                    bgsanguo.setVisibility(View.VISIBLE);
+                    bgwei.setVisibility(View.GONE);
+                    bgshu.setVisibility(View.GONE);
+                    bgwu.setVisibility(View.GONE);
+                    //关键字查找
+                    updateUI(keyword,1);
+                }
+            }
+        });
+
         //增加按钮
         ImageView zengjiabutton = (ImageView)findViewById(R.id.add_btn);
         zengjiabutton.setOnClickListener(new View.OnClickListener(){
@@ -195,8 +222,13 @@ public class InfoList extends Activity{
                         else{
                             MyDataBase db = new MyDataBase(getBaseContext());
                             SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-
+                            sqLiteDatabase.execSQL("insert into t_table(name,sex,live,place,nation,information,image,imagebitmap,flag)"+
+                                    "values("+dialogname.getText().toString()+","+dialogsex.getText().toString()+","+dialoglive.getText().toString()
+                                            +","+dialogplace.getText().toString()+","+dialoginformation.getText().toString()+","+uploda_pic+","+
+                                    0+");"
+                            ); //插入语句
                             sqLiteDatabase.close();
+
                         }
 //                        if (dialogname.length() != 0) {
 //                            MyDataBase db = new MyDataBase(getBaseContext());
@@ -208,8 +240,7 @@ public class InfoList extends Activity{
 //                        }
 
 //                        dataUpdate();//更新到当前UI上
-                        Toast.makeText(InfoList.this,"人物信息已修改",Toast.LENGTH_SHORT).show();
-                        setResult(22,new Intent());
+                        Toast.makeText(InfoList.this,"人物信息已添加",Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("放弃修改", new DialogInterface.OnClickListener() {
@@ -221,13 +252,108 @@ public class InfoList extends Activity{
                 builder.show();
             }
         });
+
+//        btchoose=(Button) findViewById(R.id.choose);
+//
+//        btchoose.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(ContextCompat.checkSelfPermission(InfoList.this,"android.permission.WRITE_EXTERNAL_STORAGE")!= PackageManager.PERMISSION_GRANTED){
+//                    ActivityCompat.requestPermissions(InfoList.this,new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"},1);
+//                }else{
+//                    openAlbum();
+//                }
+//            }
+//        });
     }
+
+    /*****************************/
+    private void openAlbum(){
+        Intent intent=new Intent("android.intent.action.GET_CONTENT");
+        intent.setType("image/*");
+        startActivityForResult(intent,CHOOSE_PHOTO);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 1:
+                if(grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                    openAlbum();
+                } else {
+                    Toast.makeText(this, "you denied the permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    @TargetApi(19)
+    private String handleImageOnKitKat(Intent data){
+        String imagepath=null;
+        Uri uri=data.getData();
+        if(DocumentsContract.isDocumentUri(this,uri)){
+            String docid=DocumentsContract.getDocumentId(uri);
+            if("com.android.providers.media.documents".equals(uri.getAuthority())){
+                String id=docid.split(":")[1];
+                String selection= MediaStore.Images.Media._ID+"="+id;
+                imagepath=getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,selection);
+
+            }else if("com.android.providers.downloads.documents".equals(uri.getAuthority())){
+                Uri contentUri= ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),Long.valueOf(docid));
+                imagepath=getImagePath(contentUri,null);
+            }
+        }else if("content".equalsIgnoreCase(uri.getScheme())){
+            imagepath=getImagePath(uri,null);
+        }else if("file".equalsIgnoreCase(uri.getScheme())){
+            imagepath=uri.getPath();
+        }
+        return imagepath;
+  //      displayImage(imagepath);
+    }
+    private String handleImageBeforeKitKat(Intent data){
+        Uri uri=data.getData();
+        String imagepath=getImagePath(uri,null);
+        return imagepath;
+ //       displayImage(imagepath);
+    }
+    private  String getImagePath(Uri uri,String selection){
+        String path=null;
+        Cursor cursor=getContentResolver().query(uri,null,selection,null,null);
+        if(cursor!=null){
+            if(cursor.moveToFirst()){
+                path=cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                cursor.close();
+            }
+        }
+        return path;
+    }
+    private void displayImage(String imagepath){
+        if(imagepath!=null){
+            Bitmap bitmap= BitmapFactory.decodeFile(imagepath);
+            picture.setImageBitmap(bitmap);
+        }else{
+            Toast.makeText(this,"fail to get iamge",Toast.LENGTH_LONG).show();
+        }
+    }
+    /*****************************/
 
     //接收到返回的结果
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode==2 && resultCode==22){
             updateUI(current_sql_obeject,0); //更新UI
+        }
+        else if (requestCode==CHOOSE_PHOTO){
+            if(resultCode==RESULT_OK){
+                if(Build.VERSION.SDK_INT>=19){
+                    uploda_pic = handleImageOnKitKat(data);
+                }else {
+                    uploda_pic = handleImageBeforeKitKat(data);
+                }
+            }
+            else {
+                Toast.makeText(this, "fail", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -242,7 +368,8 @@ public class InfoList extends Activity{
                     Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
                             cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor.getColumnIndex("live")),
                             cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
-                            cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),0);
+                            cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),
+                            cursor.getInt(cursor.getColumnIndex("flag")));
                     Infos.add(in);
                 }
                 sq1.close();
@@ -252,10 +379,12 @@ public class InfoList extends Activity{
                 SQLiteDatabase sq2=dbhelper.getReadableDatabase();
                 Cursor cursor = sq2.rawQuery("select * from t_table where nation='" +sql_obeject+ "';" ,null); //查询
                 for(cursor.moveToFirst();!(cursor.isAfterLast());cursor.moveToNext()){
+//                    Toast.makeText(InfoList.this,""+cursor.getInt(cursor.getColumnIndex("id")),Toast.LENGTH_LONG).show();
                     Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
                             cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor.getColumnIndex("live")),
                             cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
-                            cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),0);
+                            cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),
+                            cursor.getInt(cursor.getColumnIndex("flag")));
                     Infos.add(in);
                 }
                 sq2.close();
@@ -270,7 +399,8 @@ public class InfoList extends Activity{
                     Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
                             cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor.getColumnIndex("live")),
                             cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
-                            cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),0);
+                            cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),
+                            cursor.getInt(cursor.getColumnIndex("flag")));
                     Infos.add(in);
                 }
                 sqLiteDatabase.close();
@@ -309,54 +439,73 @@ public class InfoList extends Activity{
         SQLiteDatabase db = dbhelper.getWritableDatabase();
 
         ContentValues cv=new ContentValues();
-        cv.put("id",0);cv.put("name","关羽");cv.put("sex","男");cv.put("live","？ - 219");
-        cv.put("place","司隶河东郡解");cv.put("nation","蜀");cv.put("information","66");cv.put("image",R.mipmap.guanyu);
+//        cv.put("id",1);
+        cv.put("name","关羽");cv.put("sex","男");cv.put("live","？ - 219");cv.put("place","司隶河东郡解");
+        cv.put("nation","蜀");cv.put("information","66");cv.put("image",R.mipmap.guanyu);
+        cv.put("imagebitmap","");cv.put("flag",0);
         db.insert("t_table",null,cv);
 
         ContentValues cv1=new ContentValues();
-        cv1.put("id",1);cv1.put("name","刘备");cv1.put("sex","男");cv1.put("live","161 - 223");
-        cv1.put("place","幽州涿郡涿");cv1.put("nation","蜀");cv1.put("information","66");cv1.put("image",R.mipmap.liubei);
+//        cv1.put("id",2);
+        cv1.put("name","刘备");cv1.put("sex","男");cv1.put("live","161 - 223");cv1.put("place","幽州涿郡涿");
+        cv1.put("nation","蜀");cv1.put("information","66");cv1.put("image",R.mipmap.liubei);
+        cv1.put("imagebitmap","");cv1.put("flag",0);
         db.insert("t_table",null,cv1);
 
         ContentValues cv2=new ContentValues();
-        cv2.put("id",2);cv2.put("name","张飞");cv2.put("sex","男");cv2.put("live","？ - 221");
-        cv2.put("place","幽州涿郡");cv2.put("nation","蜀");cv2.put("information","66");cv2.put("image",R.mipmap.zhangfei);
+//        cv2.put("id",3);
+        cv2.put("name","张飞");cv2.put("sex","男");cv2.put("live","？ - 221");cv2.put("place","幽州涿郡");
+        cv2.put("nation","蜀");cv2.put("information","66");cv2.put("image",R.mipmap.zhangfei);
+        cv2.put("imagebitmap","");cv2.put("flag",0);
         db.insert("t_table",null,cv2);
 
         ContentValues cv3=new ContentValues();
-        cv3.put("id",3);cv3.put("name","诸葛亮");cv3.put("sex","男");cv3.put("live","181 - 234");
+//        cv3.put("id",4);
+        cv3.put("name","诸葛亮");cv3.put("sex","男");cv3.put("live","181 - 234");
         cv3.put("place","徐州琅邪国阳都");cv3.put("nation","蜀");cv3.put("information","66");cv3.put("image",R.mipmap.zhugeliang);
+        cv3.put("imagebitmap","");cv3.put("flag",0);
         db.insert("t_table",null,cv3);
 
         ContentValues cv4=new ContentValues();
-        cv4.put("id",4);cv4.put("name","曹操");cv4.put("sex","男");cv4.put("live","155 - 220");
+//        cv4.put("id",5);
+        cv4.put("name","曹操");cv4.put("sex","男");cv4.put("live","155 - 220");
         cv4.put("place","豫州沛国谯");cv4.put("nation","魏");cv4.put("information","66");cv4.put("image",R.mipmap.caocao);
+        cv4.put("imagebitmap","");cv4.put("flag",0);
         db.insert("t_table",null,cv4);
 
         ContentValues cv5=new ContentValues();
-        cv5.put("id",5);cv5.put("name","曹丕");cv5.put("sex","男");cv5.put("live","187 - 226");
+//        cv5.put("id",6);
+        cv5.put("name","曹丕");cv5.put("sex","男");cv5.put("live","187 - 226");
         cv5.put("place","豫州沛国谯");cv5.put("nation","魏");cv5.put("information","66");cv5.put("image",R.mipmap.caopi);
+        cv5.put("imagebitmap","");cv5.put("flag",0);
         db.insert("t_table",null,cv5);
 
         ContentValues cv6=new ContentValues();
-        cv6.put("id",6);cv6.put("name","司马懿");cv6.put("sex","男");cv6.put("live","179 - 251");
+//        cv6.put("id",7);
+        cv6.put("name","司马懿");cv6.put("sex","男");cv6.put("live","179 - 251");
         cv6.put("place","司隶河内郡温");cv6.put("nation","魏");cv6.put("information","66");cv6.put("image",R.mipmap.simayi);
+        cv6.put("imagebitmap","");cv6.put("flag",0);
         db.insert("t_table",null,cv6);
 
-
         ContentValues cv7=new ContentValues();
-        cv7.put("id",7);cv7.put("name","孙权");cv7.put("sex","男");cv7.put("live","182 - 252");
+//        cv7.put("id",8);
+        cv7.put("name","孙权");cv7.put("sex","男");cv7.put("live","182 - 252");
         cv7.put("place","扬州吴郡富春");cv7.put("nation","吴");cv7.put("information","66");cv7.put("image",R.mipmap.sunquan);
+        cv7.put("imagebitmap","");cv7.put("flag",0);
         db.insert("t_table",null,cv7);
 
         ContentValues cv8=new ContentValues();
-        cv8.put("id",8);cv8.put("name","周瑜");cv8.put("sex"," 男");cv8.put("live","175 - 210");
+//        cv8.put("id",9);
+        cv8.put("name","周瑜");cv8.put("sex"," 男");cv8.put("live","175 - 210");
         cv8.put("place","扬州庐江郡舒");cv8.put("nation","吴");cv8.put("information","66");cv8.put("image",R.mipmap.zhouyu);
+        cv8.put("imagebitmap","");cv8.put("flag",0);
         db.insert("t_table",null,cv8);
 
         ContentValues cv9=new ContentValues();
-        cv9.put("id",9);cv9.put("name","鲁肃");cv9.put("sex","男");cv9.put("live","172 - 217");
+//        cv9.put("id",10);
+        cv9.put("name","鲁肃");cv9.put("sex","男");cv9.put("live","172 - 217");
         cv9.put("place","徐州下邳国东城");cv9.put("nation","吴");cv9.put("information","66");cv9.put("image",R.mipmap.lusu);
+        cv9.put("imagebitmap","");cv9.put("flag",0);
         db.insert("t_table",null,cv9);
 
         db.close();
