@@ -18,7 +18,6 @@ public class Info implements Serializable {
     private int flag; //加入收藏夹标记
     private String imagepath; //上传的图片路径
 
-    //todo String imagepath
     public Info(int index,String name, String sex, String live, String place,String nation,String information,int id,int flag) {
         this.imageindex = index;
         this.name = name;

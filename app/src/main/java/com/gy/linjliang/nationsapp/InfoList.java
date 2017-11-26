@@ -25,13 +25,16 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -194,6 +197,32 @@ public class InfoList extends Activity{
                     //关键字查找
                     updateUI(keyword,1);
                 }
+            }
+        });
+        /*          监听软键盘回车进行搜索           */
+        serchtext.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                //当actionId == XX_SEND 或者 XX_DONE时都触发
+                //或者event.getKeyCode == ENTER 且 event.getAction == ACTION_DOWN时也触发
+                //注意，这是一定要判断event != null。因为在某些输入法上会返回null。
+                if (actionId == EditorInfo.IME_ACTION_SEND
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction())) {
+                    //处理事件
+                    if(serchtext.length()!=0){
+                        String keyword = serchtext.getText().toString();
+                        radioall.setChecked(true);
+                        //切换背景图
+                        bgsanguo.setVisibility(View.VISIBLE);
+                        bgwei.setVisibility(View.GONE);
+                        bgshu.setVisibility(View.GONE);
+                        bgwu.setVisibility(View.GONE);
+                        //关键字查找
+                        updateUI(keyword,1);
+                    }
+                }
+                return false;
             }
         });
 

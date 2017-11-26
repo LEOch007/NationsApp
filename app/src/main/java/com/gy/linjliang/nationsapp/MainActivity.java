@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        // 打开用户帮助
         final ImageView user_help = (ImageView) findViewById(R.id.user_help);
 
         ImageView getHelp = (ImageView) findViewById(R.id.getHelp);
@@ -92,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 user_help.setVisibility(View.VISIBLE);
             }
         });
-
         user_help.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
