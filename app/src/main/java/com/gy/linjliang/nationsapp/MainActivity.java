@@ -2,7 +2,13 @@ package com.gy.linjliang.nationsapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,18 +24,25 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private boolean tag=false; //点击浮动按钮变化
     private ImageView mfab;
     private RecyclerView mshoucangjia; //收藏夹
     private MyAdapter shoucangAdapter;
     private List<Info> shoucangList; //收藏夹的List
+
+    private ImageView music_on;
+    private ImageView music_off;
+    private MediaPlayer mediaPlayer=new MediaPlayer();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +131,18 @@ public class MainActivity extends AppCompatActivity {
         /*     ------   注册订阅者  -------   */
         EventBus.getDefault().register(this); //订阅消息
 
+        //音乐播放器
+
+        music_on=(ImageView) findViewById(R.id.music_on);
+        music_off=(ImageView) findViewById(R.id.music_off);
+        music_on.setOnClickListener(this);
+        music_off.setOnClickListener(this);
+        if(ContextCompat.checkSelfPermission(MainActivity.this,"android.permission.WRITE_EXTERNAL_STORAGE")!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"},1);
+        }else{
+            initMediaPlayer();
+        }
+
     }
     //更新UI函数
     public void udateUI(){
@@ -174,5 +199,63 @@ public class MainActivity extends AppCompatActivity {
 //        shoucangList.add(new Info(R.mipmap.caocao,"haha","ha","ha","haha","hah","ahah",2,0));
         shoucangList.add(ren);
         udateUI();
+    }
+
+    //初始化音乐播放器
+    private void initMediaPlayer(){
+        try{
+            File file=new File(Environment.getExternalStorageDirectory(),"bgm.mp3");
+            mediaPlayer.setDataSource(file.getPath());
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //动态申请权限
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 1:
+                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    initMediaPlayer();
+                } else {
+                    Toast.makeText(this, "拒绝权限将无法使用音乐播放功能", Toast.LENGTH_SHORT).show();
+                    System.exit(0);
+
+                }
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
+
+
+    //按钮
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.music_off:
+                if(!mediaPlayer.isPlaying()){
+                    mediaPlayer.start();
+                    music_on.setVisibility(View.VISIBLE);
+                    music_off.setVisibility(View.GONE);
+                    mediaPlayer.setLooping(true);
+                }
+                break;
+            case R.id.music_on:
+                if(mediaPlayer.isPlaying()){
+                    mediaPlayer.reset();
+                    initMediaPlayer();
+                    music_off.setVisibility(View.VISIBLE);
+                    music_on.setVisibility(View.GONE);
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
