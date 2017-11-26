@@ -2,45 +2,10 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@mipmap/bg_favorite"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tubiao"
-        android:visibility="visible"
-        android:textSize="20sp"
-        android:text="*"
-        android:textColor="@android:color/white"
-        android:background="@drawable/icon_shape"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_margin="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
-    <TextView
-        android:id="@+id/wenzi"
-        android:visibility="visible"
-        android:textSize="18sp"
-        android:text="收藏夹"
-        android:textColor="@android:color/black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tubiao"
-        app:layout_constraintTop_toTopOf="@+id/tubiao"
-        app:layout_constraintLeft_toRightOf="@+id/tubiao" />
-    <View
-        android:id="@+id/selfline"
-        android:visibility="visible"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:background="#1E000000"
-        app:layout_constraintTop_toBottomOf="@+id/tubiao"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintHorizontal_bias="0.0" />
 
     <android.support.v7.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -48,7 +13,7 @@
         android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@+id/selfline"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp" />

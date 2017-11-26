@@ -83,6 +83,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        final ImageView user_help = (ImageView) findViewById(R.id.user_help);
+
+        ImageView getHelp = (ImageView) findViewById(R.id.getHelp);
+        getHelp.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                user_help.setVisibility(View.VISIBLE);
+            }
+        });
+
+        user_help.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                user_help.setVisibility(View.GONE);
+            }
+        });
+
+
         //音乐播放器
         music_on=(ImageView) findViewById(R.id.music_on);
         music_off=(ImageView) findViewById(R.id.music_off);

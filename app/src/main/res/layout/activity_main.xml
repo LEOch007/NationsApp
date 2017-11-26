@@ -78,4 +78,33 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp" />
 
+    <ImageView
+        android:src="@mipmap/help_btn"
+        android:visibility="visible"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        android:id="@+id/getHelp"
+        />
+
+    <ImageView
+        android:id="@+id/user_help"
+        android:visibility="gone"
+        android:src="@mipmap/user_help"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:scaleType="fitXY"
+        android:layout_marginTop="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
