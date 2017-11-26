@@ -16,9 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InfoList"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".InfoList" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".InfoDetail"/>
+        <activity android:name=".Favorite"/>
     </application>
 
 </manifest>

@@ -369,7 +369,6 @@ public class InfoList extends Activity{
                 SQLiteDatabase sq2=dbhelper.getReadableDatabase();
                 Cursor cursor = sq2.rawQuery("select * from t_table where nation='" +sql_obeject+ "';" ,null); //查询
                 for(cursor.moveToFirst();!(cursor.isAfterLast());cursor.moveToNext()){
-//                    Toast.makeText(InfoList.this,""+cursor.getInt(cursor.getColumnIndex("id")),Toast.LENGTH_LONG).show();
                     Info in = new Info(cursor.getInt(cursor.getColumnIndex("image")), cursor.getString(cursor.getColumnIndex("name")),
                             cursor.getString(cursor.getColumnIndex("sex")), cursor.getString(cursor.getColumnIndex("live")),
                             cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
