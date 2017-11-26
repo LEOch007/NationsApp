@@ -76,6 +76,9 @@ public class InfoList extends Activity{
     public  static final int CHOOSE_PHOTO=24;
     private ImageView picture;
 
+    //唯一性
+    private static int cnt=0;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +88,11 @@ public class InfoList extends Activity{
         current_sql_obeject=guojia; //限定范围
 
         //数据库数据初始化
-        initdata();
+        if(cnt==0){
+            initdata();
+            cnt = cnt+1;
+        }
+
         /*    --- RecyclerView ---  */
         mRecycleView = (RecyclerView) findViewById(R.id.recyclerview);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this)); //垂直布局
@@ -442,8 +449,9 @@ public class InfoList extends Activity{
 
     //初始化数据库中的数据
     private void initdata(){
-
         SQLiteDatabase db = dbhelper.getWritableDatabase();
+
+
 
         ContentValues cv=new ContentValues();
 //        cv.put("id",1);

@@ -27,6 +27,12 @@ public class MyDataBase extends SQLiteOpenHelper {
                 "(id integer primary key autoincrement,name varchar(20) unique,sex varchar(5),live varchar(10)," +
                 "place varchar(10),nation varchar(10),information varchar(800),image int,imagebitmap varchar(800),flag int)";
         db.execSQL(sql);
+
+//        //唯一性
+//        String once="create table if not exists one_table" +
+//                "(id integer primary key,name varchar(20) unique)";
+//        db.execSQL(once);
+//        db.execSQL("insert into one_table(id,name) values(1,\"onlyone\");");
     }
 
     @Override

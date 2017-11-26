@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -51,9 +52,15 @@ public class InfoDetail extends Activity {
 
         p = (Info) getIntent().getSerializableExtra("Info"); // 接收
 
-        //添加各内容
+        //添加头像
         ima = (ImageView)findViewById(R.id.ren_touxiang);
-        ima.setImageResource(p.getImageindex());    //头像图片
+        if(p.getImagepath().equals("")){
+            ima.setImageResource(p.getImageindex());
+        }else{
+            ima.setImageBitmap(BitmapFactory.decodeFile(p.getImagepath()));
+        }
+
+        //添加其他内容
         renname = (TextView)findViewById(R.id.ren_name);
         renname.setText(p.getName());   //名字
         rensex = (TextView)findViewById(R.id.ren_sex);
