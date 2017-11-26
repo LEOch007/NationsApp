@@ -1,6 +1,7 @@
 package com.gy.linjliang.nationsapp;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +53,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         //内容赋值
-        holder.iv.setImageResource(Infos.get(position).getImageindex());
+        if(Infos.get(position).getImagepath().equals("")){
+            holder.iv.setImageResource(Infos.get(position).getImageindex());
+        }else{
+            holder.iv.setImageBitmap(BitmapFactory.decodeFile(Infos.get(position).getImagepath()));
+        }
         holder.tv1.setText(Infos.get(position).getName());
         holder.tv2.setText(Infos.get(position).getNation());
         //

@@ -16,6 +16,7 @@ public class Info implements Serializable {
     private String nation; //主效势力
     private String information; //其他信息
     private int flag; //加入收藏夹标记
+    private String imagepath; //上传的图片路径
 
     //todo String imagepath
     public Info(int index,String name, String sex, String live, String place,String nation,String information,int id,int flag) {
@@ -28,6 +29,7 @@ public class Info implements Serializable {
         this.information = information;
         this.id = id;
         this.flag = flag;
+        this.imagepath="";
     }
 
     public int getId() {
@@ -49,5 +51,9 @@ public class Info implements Serializable {
         return information;
     }  //其他信息
     public int getFlag(){ return flag; }
+    public String getImagepath() {return  imagepath;}
 
+    public void setImagepath(String s){
+        this.imagepath = s;
+    } //设置imagepath
 }

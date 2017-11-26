@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="@color/dialogColor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="上传图片"
+            android:id="@+id/upbutton"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_information"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/text_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="姓名"
+            android:textSize="18sp"
+            android:layout_marginLeft="50dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginStart="50dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="32dp" />
+        <EditText
+            android:id="@+id/dialog_name"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/text_name"
+            android:layout_marginLeft="40dp"
+            app:layout_constraintBottom_toBottomOf="@+id/text_name"
+            app:layout_constraintTop_toTopOf="@+id/text_name"
+            app:layout_constraintVertical_bias="0.476"
+            android:layout_marginStart="40dp" />
+
+        <TextView
+            android:id="@+id/text_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="性别"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="@+id/text_name"
+            android:layout_marginTop="25dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_name" />
+        <EditText
+            android:id="@+id/dialog_sex"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/dialog_name"
+            app:layout_constraintTop_toTopOf="@+id/text_sex"
+            app:layout_constraintBottom_toBottomOf="@+id/text_sex"
+            app:layout_constraintVertical_bias="0.482" />
+
+        <TextView
+            android:id="@+id/text_live"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="生卒"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="@+id/text_sex"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_sex" />
+        <EditText
+            android:id="@+id/dialog_live"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/dialog_sex"
+            app:layout_constraintTop_toTopOf="@+id/text_live"
+            app:layout_constraintBottom_toBottomOf="@+id/text_live" />
+
+        <TextView
+            android:id="@+id/text_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="籍贯"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="@+id/text_live"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_live" />
+        <EditText
+            android:id="@+id/dialog_place"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/dialog_live"
+            app:layout_constraintTop_toTopOf="@+id/text_place"
+            app:layout_constraintBottom_toBottomOf="@+id/text_place" />
+
+        <TextView
+            android:id="@+id/text_nation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="势力"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="@+id/text_place"
+            app:layout_constraintTop_toBottomOf="@+id/text_place" />
+        <EditText
+            android:id="@+id/dialog_nation"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/dialog_place"
+            app:layout_constraintTop_toTopOf="@+id/text_nation"
+            app:layout_constraintBottom_toBottomOf="@+id/text_nation" />
+
+        <TextView
+            android:id="@+id/text_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="人物信息"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="@+id/text_nation"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_nation" />
+        <EditText
+            android:id="@+id/dialog_information"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:ems="15"
+            app:layout_constraintLeft_toLeftOf="@+id/text_information"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_information" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

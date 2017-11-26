@@ -51,7 +51,7 @@ public class InfoList extends Activity{
     private MyDataBase dbhelper = new MyDataBase(InfoList.this,"t_db",null,1);
     private String current_sql_obeject = "全部"; //当前查询的范围
 
-    private String uploda_pic;
+    private String uploda_pic=""; //上传路径
 
     //搜索组
     private ImageView serchbutton;
@@ -197,7 +197,7 @@ public class InfoList extends Activity{
             public void onClick(View v){
                 // 自定义对话框的实现——使用 LayoutInflater 类
                 LayoutInflater factory = LayoutInflater.from(InfoList.this);
-                View newView = factory.inflate(R.layout.dialoglayout, null);
+                View newView = factory.inflate(R.layout.dialog_add, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(InfoList.this);
 
                 dialogname = (EditText) newView.findViewById(R.id.dialog_name);
@@ -206,7 +206,17 @@ public class InfoList extends Activity{
                 dialogplace = (EditText) newView.findViewById(R.id.dialog_place);
                 dialognation = (EditText) newView.findViewById(R.id.dialog_nation);
                 dialoginformation = (EditText) newView.findViewById(R.id.dialog_information);
-
+                btchoose=(Button) newView.findViewById(R.id.upbutton);
+                btchoose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(ContextCompat.checkSelfPermission(InfoList.this,"android.permission.WRITE_EXTERNAL_STORAGE")!= PackageManager.PERMISSION_GRANTED){
+                            ActivityCompat.requestPermissions(InfoList.this,new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"},1);
+                        }else{
+                            openAlbum();
+                        }
+                    }
+                });
                 // 自定义对话框的实现
                 builder.setView(newView);
                 builder.setTitle("增加人物信息");
@@ -217,7 +227,7 @@ public class InfoList extends Activity{
                                 (dialoglive.length() == 0) || (dialogplace.length() == 0) ||
                                 (dialognation.length() == 0) || (dialoginformation.length() == 0))
                         {
-                            Toast.makeText(InfoList.this,"人物信息不能为空",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(InfoList.this,"人物各项信息不能为空",Toast.LENGTH_SHORT).show();
                         }
                         else{
                             MyDataBase db = new MyDataBase(getBaseContext());
@@ -225,7 +235,7 @@ public class InfoList extends Activity{
                             sqLiteDatabase.execSQL("insert into t_table(name,sex,live,place,nation,information,image,imagebitmap,flag) "+
                                     "values(?,?,?,?,?,?,?,?,?);",new Object[]{dialogname.getText().toString(),dialogsex.getText().toString(),
                                     dialoglive.getText().toString(),dialogplace.getText().toString(),dialognation.getText().toString(),
-                                    dialoginformation.getText().toString(),R.mipmap.ic_launcher,0}
+                                    dialoginformation.getText().toString(),R.mipmap.ic_launcher,uploda_pic,0}
                             ); //插入语句
                             sqLiteDatabase.close();
                             updateUI(current_sql_obeject,0);//更新到当前UI上
@@ -236,25 +246,12 @@ public class InfoList extends Activity{
                 builder.setNegativeButton("放弃修改", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        uploda_pic=""; //重置
                     }
                 });
                 builder.show();
             }
         });
-
-//        btchoose=(Button) findViewById(R.id.choose);
-//
-//        btchoose.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(ContextCompat.checkSelfPermission(InfoList.this,"android.permission.WRITE_EXTERNAL_STORAGE")!= PackageManager.PERMISSION_GRANTED){
-//                    ActivityCompat.requestPermissions(InfoList.this,new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"},1);
-//                }else{
-//                    openAlbum();
-//                }
-//            }
-//        });
     }
 
     /*****************************/
@@ -333,16 +330,18 @@ public class InfoList extends Activity{
         if(requestCode==2 && resultCode==22){
             updateUI(current_sql_obeject,0); //更新UI
         }
-        else if (requestCode==CHOOSE_PHOTO){
+        if (requestCode==CHOOSE_PHOTO){
             if(resultCode==RESULT_OK){
                 if(Build.VERSION.SDK_INT>=19){
                     uploda_pic = handleImageOnKitKat(data);
+                    Toast.makeText(this, "图片上传成功", Toast.LENGTH_LONG).show();
                 }else {
                     uploda_pic = handleImageBeforeKitKat(data);
+                    Toast.makeText(this, "图片上传成功", Toast.LENGTH_LONG).show();
                 }
             }
             else {
-                Toast.makeText(this, "fail", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "未上传图片", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -360,6 +359,7 @@ public class InfoList extends Activity{
                             cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
                             cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),
                             cursor.getInt(cursor.getColumnIndex("flag")));
+                    in.setImagepath(cursor.getString(cursor.getColumnIndex("imagebitmap")));
                     Infos.add(in);
                 }
                 sq1.close();
@@ -374,6 +374,7 @@ public class InfoList extends Activity{
                             cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
                             cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),
                             cursor.getInt(cursor.getColumnIndex("flag")));
+                    in.setImagepath(cursor.getString(cursor.getColumnIndex("imagebitmap")));
                     Infos.add(in);
                 }
                 sq2.close();
@@ -390,6 +391,7 @@ public class InfoList extends Activity{
                             cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
                             cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),
                             cursor.getInt(cursor.getColumnIndex("flag")));
+                    in.setImagepath(cursor.getString(cursor.getColumnIndex("imagebitmap")));
                     Infos.add(in);
                 }
                 sqLiteDatabase.close();

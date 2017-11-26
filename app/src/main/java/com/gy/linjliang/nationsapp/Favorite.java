@@ -50,6 +50,7 @@ public class Favorite extends AppCompatActivity {
                     cursor.getString(cursor.getColumnIndex("place")), cursor.getString(cursor.getColumnIndex("nation")),
                     cursor.getString(cursor.getColumnIndex("information")),cursor.getInt(cursor.getColumnIndex("id")),
                     cursor.getInt(cursor.getColumnIndex("flag")));
+            in.setImagepath(cursor.getString(cursor.getColumnIndex("imagebitmap")));
             shoucangList.add(in);
         }
         sq1.close();
@@ -82,6 +83,10 @@ public class Favorite extends AppCompatActivity {
                 });
                 message.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        MyDataBase db = new MyDataBase(getBaseContext());
+                        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+                        sqLiteDatabase.execSQL("update t_table set flag="+0+" where id="+shoucangList.get(position).getId());
+                        sqLiteDatabase.close();
                         shoucangList.remove(position);
                         shoucangAdapter.notifyDataSetChanged();
                     }
