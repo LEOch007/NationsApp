@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //初始化音乐播放器
     private void initMediaPlayer(){
         try{
-            File file=new File(Environment.getExternalStorageDirectory(),"bgm.mp3");
+            File file=new File(Environment.getExternalStorageDirectory(),"bgm_for_test.mp3");
             mediaPlayer.setDataSource(file.getPath());
             mediaPlayer.prepare();
         } catch (IOException e) {
