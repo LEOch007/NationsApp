@@ -424,9 +424,24 @@ public class InfoList extends Activity{
                 //长按事件
                 @Override
                 public boolean onItemLongClick(View view, final int position) {
-                    Toast.makeText(InfoList.this, "词条已被删除",Toast.LENGTH_SHORT).show();
-                    Infos.remove(position);
-                    myAdapter.notifyDataSetChanged();
+                    //简单对话框的设计
+                    android.support.v7.app.AlertDialog.Builder message = new android.support.v7.app.AlertDialog.Builder(InfoList.this);
+                    message.setTitle("移除词条");
+                    message.setMessage("确定从数据库中移除该词条？");
+                    message.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int i) {}
+                    });
+                    message.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            SQLiteDatabase sq3 = dbhelper.getReadableDatabase();
+                            sq3.execSQL("delete from t_table " +
+                                    "where id = ?", new Object[]{Infos.get(position).getId()});
+                            sq3.close();
+                            Infos.remove(position);
+                            myAdapter.notifyDataSetChanged();
+                        }
+                    });
+                    message.create().show();
                     return true;
                 }
 
