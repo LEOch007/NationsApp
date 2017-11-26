@@ -25,7 +25,7 @@ import org.greenrobot.eventbus.EventBus;
  */
 
 public class InfoDetail extends Activity {
-    private boolean tag = false;
+    private boolean tag;
     private Info p; //商品
     //详细信息界面
     private ImageView ima;
@@ -77,20 +77,26 @@ public class InfoDetail extends Activity {
         if(p.getFlag()==0){shoucangstar.setBackground(getDrawable(R.mipmap.empty_star));}
         else {shoucangstar.setBackground(getDrawable(R.mipmap.full_star));}
 
+        //当前状态
+        if(p.getFlag()==0){tag = false;}
+        else{ tag = true; }
+
         /*    ------  加入收藏夹 ------   */
         shoucangstar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MyDataBase db = new MyDataBase(getBaseContext());
                 SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-                if (p.getFlag()==0) {
+                if (!tag) {
                     shoucangstar.setBackground(getDrawable(R.mipmap.full_star));
                     sqLiteDatabase.execSQL("update t_table set flag="+1+" where id="+p.getId());
                     Toast.makeText(InfoDetail.this,"加入收藏夹",Toast.LENGTH_SHORT).show();
+                    tag = true;
                 } else {
                     shoucangstar.setBackground(getDrawable(R.mipmap.empty_star));
                     sqLiteDatabase.execSQL("update t_table set flag="+0+" where id="+p.getId());
                     Toast.makeText(InfoDetail.this,"移除收藏夹",Toast.LENGTH_SHORT).show();
+                    tag = false;
                 }
                 sqLiteDatabase.close();
                 setResult(22, new Intent());
